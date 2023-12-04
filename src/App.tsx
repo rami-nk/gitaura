@@ -1,28 +1,32 @@
 import {useState} from 'react';
 import './App.scss'
-import {Image, Stack, Box, Collapse, VStack} from "@chakra-ui/react";
+import {Stack, Box, Collapse, VStack, Text} from "@chakra-ui/react";
 import UserSearchInput from "./components/UserSearchInput.tsx";
 import {GitHubUser} from "./models/GitHubUser.ts";
 import Header from './components/Header.tsx';
-import {getUsers} from "./services/githubService.ts";
+import {getRepositories, getUsers} from "./services/githubService.ts";
+import {Repository} from "./models/Repository.ts";
 
-
-function App() {
+const App = () => {
 
     const [userData, setUserData] = useState<GitHubUser | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isUserLoading, setIsUserLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
+    const [repositories, setRepositories] = useState<Repository[]>([]);
 
     const handleSearch = (username: string) => {
-        setIsLoading(true);
+        setIsUserLoading(true);
         getUsers(username)
-            .then(response => {
-                setUserData(response.data as GitHubUser);
-                setIsLoading(false);
+            .then(userDataResponse => {
+                setUserData(userDataResponse.data as GitHubUser);
+                setIsUserLoading(false);
+                getRepositories(username)
+                    .then(repositoryResponse => setRepositories(repositoryResponse.data as Repository[]))
+                    .catch(error => console.log(error));
             })
             .catch(_ => {
                 setError(`No github user called ${username}. Try again!`)
-                setIsLoading(false);
+                setIsUserLoading(false);
             });
     }
 
@@ -34,7 +38,7 @@ function App() {
         <Stack spacing={2}>
             <Header/>
             <VStack spacing={8} mt={20} align="center">
-                <UserSearchInput onChange={handleChange} isLoading={isLoading} errorMessage={error} onSearch={handleSearch}/>
+                <UserSearchInput onChange={handleChange} isLoading={isUserLoading} errorMessage={error} onSearch={handleSearch}/>
                 <Collapse in={!!userData?.avatar_url} animateOpacity>
                     <Box
                         w='210px'
@@ -43,7 +47,11 @@ function App() {
                         rounded='md'
                         shadow='md'
                     >
-                        <Image src={userData?.avatar_url}/>
+                        {
+                            repositories.map(repository =>
+                                <Text key={repository.id}>{repository.name}</Text>
+                            )
+                        }
                     </Box>
                 </Collapse>
             </VStack>
