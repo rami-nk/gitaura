@@ -1,23 +1,39 @@
-import {FormControl, FormErrorMessage, FormHelperText, Input} from "@chakra-ui/react";
+import {
+    FormControl,
+    FormErrorMessage,
+    FormHelperText, IconButton,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    InputRightElement
+} from "@chakra-ui/react";
 import React, {ChangeEvent, FormEvent, useState} from "react";
 import {GitHubUser} from "../models/GitHubUser.ts";
 import {getUsers} from "../services/githubService.ts";
+import {AiFillGithub} from "react-icons/ai";
+import {BsArrowRightCircleFill} from "react-icons/bs";
 
 interface UserSearchInputProps {
-    onSearch: (user: GitHubUser) => void;
+    onSearch: (user: GitHubUser | null) => void;
 }
 
-const UserSearchInput: React.FC<UserSearchInputProps> = (props) =>  {
+const UserSearchInput: React.FC<UserSearchInputProps> = (props) => {
 
     const [username, setUsername] = useState<string>('');
     const [error, setError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setIsLoading(true);
         getUsers(username)
-            .then(response => props.onSearch(response.data))
+            .then(response => {
+                props.onSearch(response.data)
+                setIsLoading(false);
+            })
             .catch(_ => {
                 setError(`No github user called ${username}. Try again!`)
+                setIsLoading(false);
             });
     };
 
@@ -26,11 +42,26 @@ const UserSearchInput: React.FC<UserSearchInputProps> = (props) =>  {
         setError("");
     }
 
-    return <form onSubmit={handleSubmit}>
+    return <form style={{width: "fit-content"}} onSubmit={handleFormSubmit}>
         <FormControl isInvalid={error !== ""}>
-            <Input placeholder="ThePrimeagen"
-                   onChange={handleChange}
-            />
+            <InputGroup size='lg'>
+
+                <InputLeftElement>
+                    <AiFillGithub size={25}/>
+                </InputLeftElement>
+
+                <InputRightElement>
+                    <IconButton isLoading={isLoading}
+                                isRound={true}
+                                variant='solid'
+                                type="submit"
+                                icon={<BsArrowRightCircleFill size={20}/>}
+                                aria-label="load-user">
+                    </IconButton>
+                </InputRightElement>
+                <Input placeholder="ThePrimeagen"
+                       onChange={handleChange}/>
+            </InputGroup>
             {!error ?
                 <FormHelperText>Enter a GitHub username</FormHelperText>
                 :
