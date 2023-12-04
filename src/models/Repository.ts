@@ -1,17 +1,18 @@
 import {RepositoryOwner} from "./RepositoryOwner.ts";
+import {License} from "./License";
 
 export interface Repository {
     id: number;
-    node_id: string;
     name: string;
     full_name: string;
-    private: boolean;
+    forks_count?: number;
+    stargazers_count?: number;
+    watchers_count?: number;
     html_url: string;
     description: string | null;
     fork: boolean;
-    url: string;
-    languages_url: string;
-    created_at: string | null;
+    language: string;
     updated_at: string | null;
+    license: License | null;
     owner: RepositoryOwner;
 }
