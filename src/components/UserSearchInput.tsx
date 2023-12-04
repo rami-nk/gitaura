@@ -8,42 +8,32 @@ import {
     InputRightElement
 } from "@chakra-ui/react";
 import React, {ChangeEvent, FormEvent, useState} from "react";
-import {GitHubUser} from "../models/GitHubUser.ts";
-import {getUsers} from "../services/githubService.ts";
 import {AiFillGithub} from "react-icons/ai";
 import {BsArrowRightCircleFill} from "react-icons/bs";
 
 interface UserSearchInputProps {
-    onSearch: (user: GitHubUser | null) => void;
+    onSearch: (username: string) => void;
+    onChange?: () => void;
+    isLoading: boolean;
+    errorMessage?: string;
 }
 
 const UserSearchInput: React.FC<UserSearchInputProps> = (props) => {
 
     const [username, setUsername] = useState<string>('');
-    const [error, setError] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setIsLoading(true);
-        getUsers(username)
-            .then(response => {
-                props.onSearch(response.data)
-                setIsLoading(false);
-            })
-            .catch(_ => {
-                setError(`No github user called ${username}. Try again!`)
-                setIsLoading(false);
-            });
+        props.onSearch(username);
     };
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setUsername(event.target.value)
-        setError("");
+        props.onChange && props.onChange();
     }
 
     return <form style={{width: "fit-content"}} onSubmit={handleFormSubmit}>
-        <FormControl isInvalid={error !== ""}>
+        <FormControl isInvalid={!!props.errorMessage && props.errorMessage !== ""}>
             <InputGroup size='lg'>
 
                 <InputLeftElement>
@@ -51,7 +41,7 @@ const UserSearchInput: React.FC<UserSearchInputProps> = (props) => {
                 </InputLeftElement>
 
                 <InputRightElement>
-                    <IconButton isLoading={isLoading}
+                    <IconButton isLoading={props.isLoading}
                                 isRound={true}
                                 variant='solid'
                                 type="submit"
@@ -62,10 +52,10 @@ const UserSearchInput: React.FC<UserSearchInputProps> = (props) => {
                 <Input placeholder="ThePrimeagen"
                        onChange={handleChange}/>
             </InputGroup>
-            {!error ?
+            {!props.errorMessage ?
                 <FormHelperText>Enter a GitHub username</FormHelperText>
                 :
-                <FormErrorMessage>{error}</FormErrorMessage>
+                <FormErrorMessage>{props.errorMessage}</FormErrorMessage>
             }
         </FormControl>
     </form>;
