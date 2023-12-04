@@ -1,6 +1,8 @@
 export const timeAgo = (dateString: string): string => {
     const date = new Date(dateString);
     const now = new Date();
+
+    if (date.getTime() > now.getTime()) throw Error("Argument dateString must be before Date.now()!");
     const seconds = Math.round((now.getTime() - date.getTime()) / 1000);
     const minutes = Math.round(seconds / 60);
     const hours = Math.round(minutes / 60);
