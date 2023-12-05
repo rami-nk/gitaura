@@ -1,8 +1,6 @@
 import {useState} from 'react';
 import './App.scss'
 import {
-    Button,
-    Input,
     Stack,
     VStack,
 } from "@chakra-ui/react";
@@ -14,6 +12,7 @@ import {Repository} from "./models/Repository.ts";
 import RepositoriesList from "./components/RepositoriesList.tsx";
 import NoResults from './components/NoResults.tsx';
 import {hasNextPage} from './services/stringUtils.ts';
+import RepositorySearch from "./components/RepositorySearch.tsx";
 
 const App = () => {
 
@@ -23,7 +22,6 @@ const App = () => {
     const [repositories, setRepositories] = useState<Repository[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
-    const [searchString, setSearchString] = useState<string>("");
     const [filteredRepositories, setFilteredRepositories] = useState<Repository[]>([]);
     const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
 
@@ -78,7 +76,11 @@ const App = () => {
             });
     };
 
-    const handleSearchInRepository = () => {
+    const handleSearchInRepository = (searchString: string) => {
+        if (searchString === "" || searchString === " ") {
+            setShowSearchResults(false);
+            return;
+        }
         searchForRepository(userData!.login, searchString)
             .then(response => {
                 setShowSearchResults(true);
@@ -93,10 +95,7 @@ const App = () => {
             <VStack w="100%" spacing={8} mt={20} align="center">
                 <UserSearchInput onChange={handleChange} isLoading={isLoading} errorMessage={error}
                                  onSearch={handleInitialUserAndRepoSearch}/>
-                <Input onChange={(event) => setSearchString(event.target.value)}/>
-                <Button onClick={handleSearchInRepository}>
-                    click
-                </Button>
+                <RepositorySearch onSearch={handleSearchInRepository}/>
                 <VStack w={["90%", "70%", "60%"]} spacing={2} align="center">
                     {
                         showSearchResults && filteredRepositories.length !== 0 &&
