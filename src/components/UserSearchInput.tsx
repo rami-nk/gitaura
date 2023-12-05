@@ -42,6 +42,7 @@ const UserSearchInput: React.FC<UserSearchInputProps> = (props) => {
 
                 <InputRightElement>
                     <IconButton isLoading={props.isLoading}
+                                data-testid={props.isLoading ? "loading-spinner": ""}
                                 isRound={true}
                                 variant='solid'
                                 type="submit"
