@@ -18,22 +18,26 @@ const App = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const [repositories, setRepositories] = useState<Repository[]>([]);
+    const [hasMore, setHasMore] = useState<boolean>(false);
+    const [page, setPage] = useState<number>(1);
 
     const handleSearch = (username: string) => {
+        setPage(1);
         setIsLoading(true);
         getUsers(username)
             .then(userDataResponse => {
                 setUserData(userDataResponse.data as GitHubUser);
-                return getRepositories(username);
+                return getRepositories(username, 1);
             })
             .then(repositoryResponse => {
                 setRepositories(repositoryResponse.data as Repository[]);
+                setHasMore(!!repositoryResponse.headers.link);
             })
             .catch(error => {
                 const notFoundError = error.message === "Not Found";
                 setError(notFoundError ?
                     `No github user called ${username}. Try again!` :
-                `Error occurred: ${error.message}`);
+                    `Error occurred: ${error.message}`);
                 setRepositories([]);
                 setUserData(null);
             })
@@ -47,8 +51,26 @@ const App = () => {
     }
 
     const handleLoadMoreRepositories = () => {
-        console.log("load more repositories");
-    }
+        if (!hasMore || !userData) return;
+
+        const nextPage = page + 1;
+
+        getRepositories(userData!.login, nextPage)
+            .then(repositoryResponse => {
+                setRepositories(prevState => [...prevState, ...(repositoryResponse.data as Repository[])]);
+                setHasMore(!!repositoryResponse.headers.link);
+                setPage(nextPage);
+            })
+            .catch(error => {
+                const notFoundError = error.message === "Not Found";
+                setError(notFoundError ?
+                    `No github user called ${userData!.login}. Try again!` :
+                    `Error occurred: ${error.message}`);
+                setRepositories([]);
+                setUserData(null);
+                console.error(error);
+            });
+    };
 
     return (
         <Stack spacing={2}>
