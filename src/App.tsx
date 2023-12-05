@@ -24,7 +24,7 @@ const App = () => {
     const [hasMore, setHasMore] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
 
-    const handleSearch = (username: string) => {
+    const handleInitialUserAndRepoSearch = (username: string) => {
         setPage(1);
         setIsLoading(true);
         getUsers(username)
@@ -82,7 +82,7 @@ const App = () => {
             <Header/>
             <VStack w="100%" spacing={8} mt={20} align="center">
                 <UserSearchInput onChange={handleChange} isLoading={isLoading} errorMessage={error}
-                                 onSearch={handleSearch}/>
+                                 onSearch={handleInitialUserAndRepoSearch}/>
                 <Input onChange={(event) => setSearchString(event.target.value)} />
                 <Button onClick={async () => {
                     searchForRepository(userData!.login, searchString)
