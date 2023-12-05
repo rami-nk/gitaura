@@ -13,7 +13,7 @@ const RepositoriesList: React.FC<RepositoriesListProps> = (props) => {
 
     useEffect(() => {
         const observerCallback = (entries: any) => {
-            entries.forEach((entry: { isIntersecting: any; }) => {
+            entries.forEach((entry: { isIntersecting: any; intersectionRatio: number }) => {
                 if (entry.isIntersecting) {
                     props.onLoadMore();
                 }
@@ -22,8 +22,7 @@ const RepositoriesList: React.FC<RepositoriesListProps> = (props) => {
 
         const observer = new IntersectionObserver(observerCallback, {
             root: null,
-            rootMargin: "20%",
-            threshold: 1.0,
+            threshold: 0.1,
         });
 
         if (loadMoreRef.current) {
@@ -44,7 +43,7 @@ const RepositoriesList: React.FC<RepositoriesListProps> = (props) => {
                     <RepositoryCard key={repository.id} repository={repository}/>
                 )
             }
-            <div ref={loadMoreRef}/>
+            <div style={{height: "100px", width: "100%"}} ref={loadMoreRef}/>
         </>
     );
 }
