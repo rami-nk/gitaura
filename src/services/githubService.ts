@@ -4,12 +4,14 @@ const octokit = new Octokit();
 
 export const getUsers = async (username: string) => {
     return octokit.request("GET /users/{username}", {
-        username: username
+        username: username,
     });
 }
 
-export const getRepositories = async (username: string) => {
+export const getRepositories = async (username: string, page: number, perPage: number = 5) => {
     return octokit.request("GET /users/{username}/repos", {
-        username: username
+        username: username,
+        per_page: perPage,
+        page: page,
     });
 }
