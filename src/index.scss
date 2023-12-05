@@ -1,3 +1,5 @@
+@import "github_language_colors";
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -74,6 +76,7 @@ button:focus-visible {
 #root {
   margin: 0;
   width: 100%;
+  overflow: auto;
 }
 
 * {

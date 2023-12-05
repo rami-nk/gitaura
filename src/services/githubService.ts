@@ -7,3 +7,9 @@ export const getUsers = async (username: string) => {
         username: username
     });
 }
+
+export const getRepositories = async (username: string) => {
+    return octokit.request("GET /users/{username}/repos", {
+        username: username
+    });
+}

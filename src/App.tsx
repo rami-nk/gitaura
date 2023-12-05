@@ -1,35 +1,69 @@
 import {useState} from 'react';
 import './App.scss'
-import {Image, Stack, Box, Collapse, VStack} from "@chakra-ui/react";
+import {
+    Stack,
+    VStack,
+} from "@chakra-ui/react";
 import UserSearchInput from "./components/UserSearchInput.tsx";
 import {GitHubUser} from "./models/GitHubUser.ts";
 import Header from './components/Header.tsx';
+import {getRepositories, getUsers} from "./services/githubService.ts";
+import {Repository} from "./models/Repository.ts";
+import RepositoriesList from "./components/RepositoriesList.tsx";
+import NoResults from './components/NoResults.tsx';
 
-
-function App() {
+const App = () => {
 
     const [userData, setUserData] = useState<GitHubUser | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>('');
+    const [repositories, setRepositories] = useState<Repository[]>([]);
 
-    const handleSearch = (user: GitHubUser | null) => {
-        setUserData(user);
+    const handleSearch = (username: string) => {
+        setIsLoading(true);
+        getUsers(username)
+            .then(userDataResponse => {
+                setUserData(userDataResponse.data as GitHubUser);
+                getRepositories(username)
+                    .then(repositoryResponse => {
+                        setRepositories(repositoryResponse.data as Repository[]);
+                        setIsLoading(false);
+                    })
+                    .catch(_ => {
+                        setError(`Unexpected error occured!`);
+                        setRepositories([]);
+                        setUserData(null);
+                        setIsLoading(false);
+                    });
+            })
+            .catch(_ => {
+                setError(`No github user called ${username}. Try again!`)
+                setRepositories([]);
+                setUserData(null);
+                setIsLoading(false);
+            });
+    }
+
+    const handleChange = () => {
+        setError("");
     }
 
     return (
         <Stack spacing={2}>
             <Header/>
-            <VStack spacing={8} mt={20} align="center">
-                <UserSearchInput onSearch={handleSearch}/>
-                <Collapse in={!!userData?.avatar_url} animateOpacity>
-                    <Box
-                        w='210px'
-                        color='white'
-                        mt='4'
-                        rounded='md'
-                        shadow='md'
-                    >
-                        <Image src={userData?.avatar_url}/>
-                    </Box>
-                </Collapse>
+            <VStack w="100%" spacing={8} mt={20} align="center">
+                <UserSearchInput onChange={handleChange} isLoading={isLoading} errorMessage={error}
+                                 onSearch={handleSearch}/>
+                <VStack w={["90%", "70%", "60%"]} spacing={2} align="center">
+                    {
+                        !isLoading && userData && repositories.length > 0 &&
+                        <RepositoriesList repositories={repositories}/>
+                    }
+                    {
+                        !isLoading && !error && userData && repositories.length === 0 &&
+                        <NoResults/>
+                    }
+                </VStack>
             </VStack>
         </Stack>
     )
