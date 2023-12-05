@@ -9,8 +9,8 @@ import {GitHubUser} from "./models/GitHubUser.ts";
 import Header from './components/Header.tsx';
 import {getRepositories, getUsers} from "./services/githubService.ts";
 import {Repository} from "./models/Repository.ts";
-import RepositoryCard from "./components/RepositoryCard.tsx";
-import {NoResults} from "./components/NoResults.tsx";
+import RepositoriesList from "./components/RepositoriesList.tsx";
+import NoResults from './components/NoResults.tsx';
 
 const App = () => {
 
@@ -57,9 +57,7 @@ const App = () => {
                 <VStack w={["90%", "70%", "60%"]} spacing={2} align="center">
                     {
                         !isLoading && userData && repositories.length > 0 &&
-                        repositories.map(repository =>
-                            <RepositoryCard repository={repository}/>
-                        )
+                        <RepositoriesList repositories={repositories}/>
                     }
                     {
                         !isLoading && !error && userData && repositories.length === 0 &&

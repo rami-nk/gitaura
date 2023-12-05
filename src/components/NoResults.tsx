@@ -4,4 +4,4 @@ const NoResults = () => {
     return (<Text>{"No public repositories found!"}</Text>);
 };
 
-export const NoResults;
+export default NoResults;
