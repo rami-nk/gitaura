@@ -9,3 +9,8 @@ export const sanitizeClassName = (language: string): string => {
         // Remove any other invalid characters
         .replace(/[^a-zA-Z0-9_-]/g, '');
 }
+
+export const hasNextPage = (link: string): boolean => {
+    const nextLinkRegex = /<([^>]+)>;\s*rel="next"/;
+    return nextLinkRegex.test(link);
+}
