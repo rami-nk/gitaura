@@ -8,7 +8,7 @@ export const getUsers = async (username: string) => {
     });
 }
 
-export const getRepositories = async (username: string, page: number, perPage: number = 5) => {
+export const getRepositories = async (username: string, page: number, perPage: number = 15) => {
     return octokit.request("GET /users/{username}/repos", {
         username: username,
         per_page: perPage,

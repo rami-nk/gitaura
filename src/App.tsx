@@ -11,6 +11,7 @@ import {getRepositories, getUsers} from "./services/githubService.ts";
 import {Repository} from "./models/Repository.ts";
 import RepositoriesList from "./components/RepositoriesList.tsx";
 import NoResults from './components/NoResults.tsx';
+import { hasNextPage } from './services/stringUtils.ts';
 
 const App = () => {
 
@@ -58,7 +59,7 @@ const App = () => {
         getRepositories(userData!.login, nextPage)
             .then(repositoryResponse => {
                 setRepositories(prevState => [...prevState, ...(repositoryResponse.data as Repository[])]);
-                setHasMore(!!repositoryResponse.headers.link);
+                setHasMore(repositoryResponse.headers.link ? hasNextPage(repositoryResponse.headers.link) : false);
                 setPage(nextPage);
             })
             .catch(error => {
