@@ -24,28 +24,30 @@ const App = () => {
         getUsers(username)
             .then(userDataResponse => {
                 setUserData(userDataResponse.data as GitHubUser);
-                getRepositories(username)
-                    .then(repositoryResponse => {
-                        setRepositories(repositoryResponse.data as Repository[]);
-                        setIsLoading(false);
-                    })
-                    .catch(_ => {
-                        setError(`Unexpected error occured!`);
-                        setRepositories([]);
-                        setUserData(null);
-                        setIsLoading(false);
-                    });
+                return getRepositories(username);
             })
-            .catch(_ => {
-                setError(`No github user called ${username}. Try again!`)
+            .then(repositoryResponse => {
+                setRepositories(repositoryResponse.data as Repository[]);
+            })
+            .catch(error => {
+                const notFoundError = error.message === "Not Found";
+                setError(notFoundError ?
+                    `No github user called ${username}. Try again!` :
+                `Error occurred: ${error.message}`);
                 setRepositories([]);
                 setUserData(null);
+            })
+            .finally(() => {
                 setIsLoading(false);
             });
     }
 
     const handleChange = () => {
         setError("");
+    }
+
+    const handleLoadMoreRepositories = () => {
+        console.log("load more repositories");
     }
 
     return (
@@ -57,7 +59,7 @@ const App = () => {
                 <VStack w={["90%", "70%", "60%"]} spacing={2} align="center">
                     {
                         !isLoading && userData && repositories.length > 0 &&
-                        <RepositoriesList repositories={repositories}/>
+                        <RepositoriesList onLoadMore={handleLoadMoreRepositories} repositories={repositories}/>
                     }
                     {
                         !isLoading && !error && userData && repositories.length === 0 &&
