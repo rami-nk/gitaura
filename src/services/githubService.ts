@@ -29,11 +29,15 @@ export const searchForRepository = async (username: string, searchString?: strin
     });
 }
 
-export const getUsersProgrammingLanguages = (username: string) => {
+export const getUsersProgrammingLanguages = (username: string, updateLanguages: (languages: any) => void) => {
 
     return octokit.paginate("GET /users/{username}/repos", {
             username: username,
             per_page: 100
-        }, (response) => response.data.map((repository) => repository.language)
+        }, (response) => {
+            const languagesFromPage = response.data.map(repository => repository.language);
+            updateLanguages(languagesFromPage);
+            return languagesFromPage;
+        }
     );
 }

@@ -7,7 +7,7 @@ import UserSearchInput from "./components/UserSearchInput.tsx";
 import Header from './components/Header.tsx';
 import RepositoriesList from "./components/RepositoriesList.tsx";
 import NoResults from './components/NoResults.tsx';
-import RepositorySearch from "./components/RepositorySearch.tsx";
+import RepositoryFilter from "./components/RepositoryFilter.tsx";
 import {useUserSearch} from "./hooks/useUserSearch.ts";
 import {useRepositoryFilter} from "./hooks/useRepositoryFilter.ts";
 import {useEffect, useState} from "react";
@@ -29,15 +29,14 @@ const App = () => {
 
     const [languages, setLanguages] = useState<string[]>([]);
 
+    const handleUpdateLanguages = (newLanguages: string[]) => {
+        setLanguages(prevLanguages => Array.from(new Set([...prevLanguages, ...newLanguages.filter(lang => lang)])));
+    };
+
     useEffect(() => {
         if (!userData || !userData.login) return;
 
-        const cleanLanguages = (languages: Array<string | null | undefined>) => {
-            return Array.from(new Set(languages.filter(lang => lang != null)));
-        }
-
-        getUsersProgrammingLanguages(userData.login)
-            .then(response => setLanguages(cleanLanguages(response) as string[]));
+        getUsersProgrammingLanguages(userData.login, handleUpdateLanguages);
     }, [userData]);
 
     return (
@@ -46,7 +45,7 @@ const App = () => {
             <VStack w="100%" spacing={8} mt={20} align="center">
                 <UserSearchInput onChange={handleChange} isLoading={isLoading} errorMessage={error}
                                  onSearch={handleInitialUserAndRepoSearch}/>
-                <RepositorySearch onSearch={handleSearchInRepository}
+                <RepositoryFilter onFilter={handleSearchInRepository}
                                   languages={languages}/>
                 <VStack w={["90%", "70%", "60%"]} spacing={2} align="center">
                     {

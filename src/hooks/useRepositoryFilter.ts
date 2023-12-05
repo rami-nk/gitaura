@@ -14,23 +14,23 @@ import { searchForRepository } from '../services/githubService.ts';
  * @returns {
  *   filteredRepositories: Repository[] - The list of repositories filtered by the search query.
  *   showSearchResults: boolean - Indicates if search results should be displayed.
- *   handleSearchInRepository: (searchString: string) => void - Function to perform a search query and update filtered repositories.
+ *   handleSearchInRepository: (searchString: string, language: string) => void - Function to perform a search query and update filtered repositories.
  * }
  */
 export const useRepositoryFilter = (userData: GitHubUser | null): UseRepositoryFilterReturn => {
     const [filteredRepositories, setFilteredRepositories] = useState<Repository[]>([]);
     const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
 
-    const handleSearchInRepository = (searchString: string) => {
+    const handleSearchInRepository = (searchString: string, language: string) => {
         if (!userData) return;
 
-        if (searchString.trim() === "") {
+        if (searchString.trim() === "" && language.trim() === "") {
             setShowSearchResults(false);
             setFilteredRepositories([]);
             return;
         }
 
-        searchForRepository(userData.login, searchString)
+        searchForRepository(userData.login, searchString, language)
             .then(response => {
                 setShowSearchResults(true);
                 setFilteredRepositories(response.data.items as Repository[]);
@@ -48,5 +48,5 @@ export const useRepositoryFilter = (userData: GitHubUser | null): UseRepositoryF
 interface UseRepositoryFilterReturn {
     filteredRepositories: Repository[];
     showSearchResults: boolean;
-    handleSearchInRepository: (searchString: string) => void;
+    handleSearchInRepository: (searchString: string, language: string) => void;
 }

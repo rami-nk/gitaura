@@ -2,22 +2,28 @@ import {Flex, FormControl, Input, InputGroup, InputLeftElement, Select} from "@c
 import React, {ChangeEvent, FormEvent, useState} from "react";
 import {GoRepo} from "react-icons/go";
 
-interface RepositorySearchProps {
-    onSearch: (value: string) => void;
+interface RepositorySearchFilter {
+    onFilter: (searchString: string, language: string) => void;
     languages: string[];
 }
 
-const RepositorySearch: React.FC<RepositorySearchProps> = (props) => {
+const RepositoryFilter: React.FC<RepositorySearchFilter> = (props) => {
 
     const [searchString, setSearchString] = useState<string>("");
+    const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
     const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        props.onSearch(searchString);
+        props.onFilter(searchString, selectedLanguage);
     };
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchString(event.target.value)
+    }
+
+    const handleSelectLanguage = (event: ChangeEvent<HTMLSelectElement>) => {
+        setSelectedLanguage(event.target.value);
+        props.onFilter(searchString, event.target.value);
     }
 
     return (
@@ -31,7 +37,7 @@ const RepositorySearch: React.FC<RepositorySearchProps> = (props) => {
 
                         <Input placeholder={"Find a repository..."} onChange={handleChange}/>
                     </InputGroup>
-                    <Select flex="0 0 20%" placeholder='Language' size='md'>
+                    <Select  onChange={handleSelectLanguage} flex="0 0 20%" placeholder='Language' size='md'>
                         {
                             props.languages.map(language =>
                                 <option key={language} value={language}>{language}</option>
@@ -44,4 +50,4 @@ const RepositorySearch: React.FC<RepositorySearchProps> = (props) => {
     );
 }
 
-export default RepositorySearch;
+export default RepositoryFilter;
