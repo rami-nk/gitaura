@@ -13,7 +13,7 @@ import {getRepositories, getUsers, searchForRepository} from "./services/githubS
 import {Repository} from "./models/Repository.ts";
 import RepositoriesList from "./components/RepositoriesList.tsx";
 import NoResults from './components/NoResults.tsx';
-import { hasNextPage } from './services/stringUtils.ts';
+import {hasNextPage} from './services/stringUtils.ts';
 
 const App = () => {
 
@@ -23,6 +23,9 @@ const App = () => {
     const [repositories, setRepositories] = useState<Repository[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
+    const [searchString, setSearchString] = useState<string>("");
+    const [filteredRepositories, setFilteredRepositories] = useState<Repository[]>([]);
+    const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
 
     const handleInitialUserAndRepoSearch = (username: string) => {
         setPage(1);
@@ -75,7 +78,14 @@ const App = () => {
             });
     };
 
-    const [searchString, setSearchString] = useState<string>("");
+    const handleSearchInRepository = () => {
+        searchForRepository(userData!.login, searchString)
+            .then(response => {
+                setShowSearchResults(true);
+                setFilteredRepositories(response.data.items as Repository[]);
+            })
+            .catch(error => console.error(error));
+    }
 
     return (
         <Stack spacing={2}>
@@ -83,22 +93,27 @@ const App = () => {
             <VStack w="100%" spacing={8} mt={20} align="center">
                 <UserSearchInput onChange={handleChange} isLoading={isLoading} errorMessage={error}
                                  onSearch={handleInitialUserAndRepoSearch}/>
-                <Input onChange={(event) => setSearchString(event.target.value)} />
-                <Button onClick={async () => {
-                    searchForRepository(userData!.login, searchString)
-                        .then(response => console.log(response))
-                        .catch(error => console.error(error));
-                }}>
+                <Input onChange={(event) => setSearchString(event.target.value)}/>
+                <Button onClick={handleSearchInRepository}>
                     click
-                    </Button>
+                </Button>
                 <VStack w={["90%", "70%", "60%"]} spacing={2} align="center">
                     {
-                        !isLoading && userData && repositories.length > 0 &&
+                        showSearchResults && filteredRepositories.length !== 0 &&
+                        <RepositoriesList onLoadMore={() => {
+                        }} repositories={filteredRepositories}/>
+                    }
+                    {
+                        !isLoading && userData && repositories.length > 0 && !showSearchResults &&
                         <RepositoriesList onLoadMore={handleLoadMoreRepositories} repositories={repositories}/>
                     }
                     {
-                        !isLoading && !error && userData && repositories.length === 0 &&
-                        <NoResults/>
+                        (!isLoading && !error && userData && repositories.length === 0) &&
+                        <NoResults message={"No public repositories found!"}/>
+                    }
+                    {
+                        (showSearchResults && filteredRepositories.length === 0) &&
+                        <NoResults message={"0 Results"}/>
                     }
                 </VStack>
             </VStack>
