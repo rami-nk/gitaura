@@ -11,7 +11,7 @@ const RepositoriesList: React.FC<RepositoriesListProps> = (props) => {
         <>
             {
                 props.repositories.map(repository =>
-                    <RepositoryCard repository={repository}/>
+                    <RepositoryCard key={repository.id} repository={repository}/>
                 )
             }
         </>
