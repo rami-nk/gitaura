@@ -10,6 +10,8 @@ import NoResults from './components/NoResults.tsx';
 import RepositorySearch from "./components/RepositorySearch.tsx";
 import {useUserSearch} from "./hooks/useUserSearch.ts";
 import {useRepositoryFilter} from "./hooks/useRepositoryFilter.ts";
+import {useEffect, useState} from "react";
+import {getUsersProgrammingLanguages} from "./services/githubService.ts";
 
 const App = () => {
 
@@ -25,13 +27,27 @@ const App = () => {
         filteredRepositories, showSearchResults, handleSearchInRepository
     } = useRepositoryFilter(userData);
 
+    const [languages, setLanguages] = useState<string[]>([]);
+
+    useEffect(() => {
+        if (!userData || !userData.login) return;
+
+        const cleanLanguages = (languages: Array<string | null | undefined>) => {
+            return Array.from(new Set(languages.filter(lang => lang != null)));
+        }
+
+        getUsersProgrammingLanguages(userData.login)
+            .then(response => setLanguages(cleanLanguages(response) as string[]));
+    }, [userData]);
+
     return (
         <Stack spacing={2}>
             <Header/>
             <VStack w="100%" spacing={8} mt={20} align="center">
                 <UserSearchInput onChange={handleChange} isLoading={isLoading} errorMessage={error}
                                  onSearch={handleInitialUserAndRepoSearch}/>
-                <RepositorySearch onSearch={handleSearchInRepository}/>
+                <RepositorySearch onSearch={handleSearchInRepository}
+                                  languages={languages}/>
                 <VStack w={["90%", "70%", "60%"]} spacing={2} align="center">
                     {
                         showSearchResults && filteredRepositories.length !== 0 &&

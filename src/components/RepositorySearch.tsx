@@ -4,6 +4,7 @@ import {GoRepo} from "react-icons/go";
 
 interface RepositorySearchProps {
     onSearch: (value: string) => void;
+    languages: string[];
 }
 
 const RepositorySearch: React.FC<RepositorySearchProps> = (props) => {
@@ -30,7 +31,13 @@ const RepositorySearch: React.FC<RepositorySearchProps> = (props) => {
 
                         <Input placeholder={"Find a repository..."} onChange={handleChange}/>
                     </InputGroup>
-                    <Select flex="0 0 20%" placeholder='Language' size='md'/>
+                    <Select flex="0 0 20%" placeholder='Language' size='md'>
+                        {
+                            props.languages.map(language =>
+                                <option key={language} value={language}>{language}</option>
+                            )
+                        }
+                    </Select>
                 </Flex>
             </FormControl>
         </form>
