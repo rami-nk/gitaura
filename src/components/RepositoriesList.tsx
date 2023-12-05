@@ -35,7 +35,7 @@ const RepositoriesList: React.FC<RepositoriesListProps> = (props) => {
                 observer.unobserve(loadMoreRef.current);
             }
         };
-    }, []);
+    }, [props.onLoadMore]);
 
     return (
         <>
