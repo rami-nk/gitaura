@@ -54,10 +54,6 @@ const App = () => {
 
     return (
         <Stack spacing={2}>
-
-            <div id="stars"></div>
-            <div id="stars2"></div>
-            <div id="stars3"></div>
             <Header/>
             <VStack w="100%" spacing={8} mt={20} align="center">
                 <UserSearchInput onChange={handleChange} isLoading={isUserLoading} errorMessage={error}
