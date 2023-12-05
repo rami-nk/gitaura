@@ -3,7 +3,6 @@ import './App.scss'
 import {
     Stack,
     VStack,
-    Text,
 } from "@chakra-ui/react";
 import UserSearchInput from "./components/UserSearchInput.tsx";
 import {GitHubUser} from "./models/GitHubUser.ts";
@@ -11,6 +10,7 @@ import Header from './components/Header.tsx';
 import {getRepositories, getUsers} from "./services/githubService.ts";
 import {Repository} from "./models/Repository.ts";
 import RepositoryCard from "./components/RepositoryCard.tsx";
+import {NoResults} from "./components/NoResults.tsx";
 
 const App = () => {
 
@@ -63,7 +63,7 @@ const App = () => {
                     }
                     {
                         !isLoading && !error && userData && repositories.length === 0 &&
-                        <Text>{"No public repositories found!"}</Text>
+                        <NoResults/>
                     }
                 </VStack>
             </VStack>
