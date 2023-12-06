@@ -10,7 +10,7 @@ vi.mock('../services/stringUtils', () => ({
 }));
 
 vi.mock('../services/dateUtils', () => ({
-    timeAgo: vi.fn((_: string) => 'Updated 1 day ago'),
+    timeAgo: vi.fn(() => 'Updated 1 day ago'),
 }));
 
 describe('RepositoryCard', () => {

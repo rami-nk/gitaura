@@ -6,7 +6,7 @@ interface NoResultsProps {
 }
 
 const NoResults: React.FC<NoResultsProps> = (props) => {
-    return (<Text>{props.message}</Text>);
+    return (<Text fontWeight="bold">{props.message}</Text>);
 };
 
 export default NoResults;
