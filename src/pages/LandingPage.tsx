@@ -11,20 +11,18 @@ const LandingPage = () => {
 
     const navigate = useNavigate();
 
-    const handleSearch = (username: string) => {
+    const handleSearch = async (username: string) => {
         setIsLoading(true);
-        getUsers(username)
-            .then(userDataResponse => {
-                navigate(`/repositories/${userDataResponse.data.login}`)
-            })
-            .catch(error => {
-                setError(error.message === "Not Found" ?
-                    `No user with name ${username}.` :
-                    `Error occurred: ${error.message}`);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
+        try {
+            const usersResponse = await getUsers(username);
+            navigate(`/repositories/${usersResponse.data.login}`)
+        } catch(error: any) {
+            setError(error.message === "Not Found" ?
+                `No user with name ${username}.` :
+                `Error occurred: ${error.message}`);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleChange = () => {

@@ -11,7 +11,11 @@ import {useParams} from "react-router-dom";
 const RepositoryViewPage = () => {
 
     const {username} = useParams();
+    const [languages, setLanguages] = useState<string[]>([]);
 
+    const {
+        filteredRepositories, showFilterResults, handleSearchInRepository
+    } = useRepositoryFilter(username);
     const {
         isLoading,
         repositories,
@@ -23,12 +27,6 @@ const RepositoryViewPage = () => {
         if (!username) return;
         handleInitialRepositoriesLoad(username);
     }, [username]);
-
-    const {
-        filteredRepositories, showFilterResults, handleSearchInRepository
-    } = useRepositoryFilter(username);
-
-    const [languages, setLanguages] = useState<string[]>([]);
 
     const handleUpdateLanguages = (newLanguages: (undefined | null | string)[]) => {
         setLanguages(prevLanguages => Array.from(new Set([...prevLanguages, ...newLanguages.filter(lang => lang) as string[]])));
