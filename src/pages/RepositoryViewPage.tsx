@@ -14,7 +14,10 @@ const RepositoryViewPage = () => {
     const [languages, setLanguages] = useState<string[]>([]);
 
     const {
-        filteredRepositories, showFilterResults, handleSearchInRepository
+        filteredRepositories,
+        showFilterResults,
+        isLoading: isFilerLoading,
+        handleSearchInRepository
     } = useRepositoryFilter(username);
     const {
         isLoading,
@@ -44,7 +47,7 @@ const RepositoryViewPage = () => {
             <RepositoryFilter onFilter={handleSearchInRepository}
                               languages={languages}/>
             <VStack w={["90%", "70%", "60%"]} spacing={2} align="center">
-                {isLoading ? (
+                {isLoading || isFilerLoading ? (
                     Array.from({length: 5}).map((_, index) => (
                         <Skeleton key={index} borderRadius="0.75rem" height="100px" width="full"/>
                     ))
