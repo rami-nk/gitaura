@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 const Layout = () => {
     return (
-        <Stack spacing={2}>
+        <Stack height="100%" spacing={2}>
             <Header/>
             <Outlet/>
         </Stack>
