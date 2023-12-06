@@ -29,7 +29,7 @@ export const searchForRepository = async (username: string, searchString?: strin
     });
 }
 
-export const getUsersProgrammingLanguages = (username: string, updateLanguages: (languages: any) => void) => {
+export const getUsersProgrammingLanguages = (username: string, updateLanguages: (languages: (null | undefined | string)[]) => void) => {
 
     return octokit.paginate("GET /users/{username}/repos", {
             username: username,
