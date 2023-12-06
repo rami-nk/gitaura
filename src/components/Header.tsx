@@ -1,4 +1,4 @@
-import {Box, Button, Flex, Heading} from "@chakra-ui/react";
+import {Button, Flex, Heading} from "@chakra-ui/react";
 import {Link, useLocation} from "react-router-dom";
 import {BsArrowLeft} from "react-icons/bs";
 
