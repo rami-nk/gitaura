@@ -4,7 +4,8 @@ import React, {useEffect, useRef} from "react";
 
 interface RepositoriesListProps {
     repositories: Repository[];
-    onLoadMore: () => void;
+    onLoadMore?: () => void;
+    isLoading?: boolean;
 }
 
 const RepositoriesList: React.FC<RepositoriesListProps> = (props) => {
@@ -14,8 +15,8 @@ const RepositoriesList: React.FC<RepositoriesListProps> = (props) => {
     useEffect(() => {
         const observerCallback = (entries: IntersectionObserverEntry[]) => {
             entries.forEach((entry: IntersectionObserverEntry) => {
-                if (entry.isIntersecting) {
-                    props.onLoadMore();
+                if (entry.isIntersecting && !props.isLoading) {
+                    props.onLoadMore && props.onLoadMore();
                 }
             });
         };
@@ -43,7 +44,10 @@ const RepositoriesList: React.FC<RepositoriesListProps> = (props) => {
                     <RepositoryCard key={repository.id} repository={repository}/>
                 )
             }
-            <div style={{height: "100px", width: "100%"}} ref={loadMoreRef}/>
+            {
+                props.onLoadMore &&
+                <div style={{height: "100px", width: "100%"}} ref={loadMoreRef}/>
+            }
         </>
     );
 }

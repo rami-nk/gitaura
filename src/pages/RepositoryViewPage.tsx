@@ -18,6 +18,7 @@ const RepositoryViewPage = () => {
     } = useRepositoryFilter(username);
     const {
         isLoading,
+        isPagingLoading,
         repositories,
         handleInitialRepositoriesLoad,
         handleLoadMoreRepositories
@@ -51,14 +52,13 @@ const RepositoryViewPage = () => {
                     filteredRepositories.length > 0 ? (
                         <>
                             <Text>{`${filteredRepositories.length} results matching repositories.`}</Text>
-                            <RepositoriesList onLoadMore={() => {
-                            }} repositories={filteredRepositories}/>
+                            <RepositoriesList key={1} repositories={filteredRepositories}/>
                         </>
                     ) : (
                         <NoResults message={"0 Results"}/>
                     )
                 ) : username && repositories.length > 0 ? (
-                    <RepositoriesList onLoadMore={() => handleLoadMoreRepositories(username)}
+                    <RepositoriesList key={2} isLoading={isPagingLoading} onLoadMore={() => handleLoadMoreRepositories(username)}
                                       repositories={repositories}/>
                 ) : (
                     username && <NoResults message={`${username} doesn't have any public repositories yet.`}/>

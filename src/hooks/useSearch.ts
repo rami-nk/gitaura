@@ -11,7 +11,8 @@ import {useFetch} from "./useFetch.ts";
  * managing related states including loading, errors, and pagination for repositories.
  *
  * @returns {
- *   isLoading: boolean - Indicates if the data fetching process is ongoing.
+ *   isLoading: boolean - Indicates if the initial data loading process is ongoing.
+ *   isPagingLoading: boolean - Indicates if the page loading process is ongoing.
  *   error: string - Error message if an error occurs during data fetching.
  *   repositories: Repository[] - List of repositories for the current GitHub user.
  *   page: number - The current page number for paginated repository fetching.
@@ -22,6 +23,7 @@ import {useFetch} from "./useFetch.ts";
 export const useSearch = (): UseSearchReturn => {
 
     const {isLoading, error, fetchData} = useFetch<RepositoriesResponse>(true);
+    const [isPagingLoading, setIsPagingLoading] = useState<boolean>(false);
     const [repositories, setRepositories] = useState<Repository[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
@@ -40,20 +42,23 @@ export const useSearch = (): UseSearchReturn => {
 
         const nextPage = page + 1;
 
+        setIsPagingLoading(true);
         const repositoryResponse = await fetchData(() => getRepositories(username, nextPage));
         if (!repositoryResponse) setRepositories([]);
         if (repositoryResponse) {
             setRepositories(prevState => [...prevState, ...(repositoryResponse.data as Repository[])]);
             setHasMore(repositoryResponse.headers.link ? hasNextPage(repositoryResponse.headers.link) : false);
             setPage(nextPage);
+            setIsPagingLoading(false);
         }
     };
 
-    return {isLoading, error, repositories, page, handleInitialRepositoriesLoad, handleLoadMoreRepositories};
+    return {isLoading: (isLoading && !isPagingLoading), isPagingLoading, error, repositories, page, handleInitialRepositoriesLoad, handleLoadMoreRepositories};
 };
 
 interface UseSearchReturn {
     isLoading: boolean;
+    isPagingLoading: boolean;
     error: string;
     repositories: Repository[];
     page: number;
