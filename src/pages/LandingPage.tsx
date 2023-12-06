@@ -12,6 +12,10 @@ const LandingPage = () => {
     const navigate = useNavigate();
 
     const handleSearch = async (username: string) => {
+        if (username.trim() === "") {
+            setError("Username must be set!");
+            return;
+        }
         setIsLoading(true);
         try {
             const usersResponse = await getUsers(username);

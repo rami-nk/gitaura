@@ -33,7 +33,7 @@ const UserSearchInput: React.FC<UserSearchInputProps> = (props) => {
     }
 
     return <form style={{width: "fit-content"}} onSubmit={handleFormSubmit}>
-        <FormControl isInvalid={!!props.errorMessage && props.errorMessage !== ""}>
+        <FormControl isInvalid={props.errorMessage !== undefined && props.errorMessage !== ""}>
             <InputGroup size='lg'>
 
                 <InputLeftElement>
