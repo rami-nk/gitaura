@@ -3,9 +3,9 @@ import {Repository} from "../models/Repository.ts";
 import {getRepositories} from "../services/githubService.ts";
 
 /**
- * Custom hook for handling user and repository data fetching from GitHub.
+ * Custom hook for handling repository data fetching from GitHub.
  *
- * This hook encapsulates the logic for fetching user details and their repositories,
+ * This hook encapsulates the logic for fetching users repositories,
  * managing related states including loading, errors, and pagination for repositories.
  *
  * @returns {
@@ -17,7 +17,7 @@ import {getRepositories} from "../services/githubService.ts";
  *   handleLoadMoreRepositories: () => void - Function to load more repositories (pagination).
  * }
  */
-export const useUserSearch = (): UseUserSearchReturn => {
+export const useSearch = (): UseSearchReturn => {
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>('');
@@ -32,6 +32,7 @@ export const useUserSearch = (): UseUserSearchReturn => {
             .then(repositoryResponse => {
                 setRepositories(repositoryResponse.data as Repository[]);
                 setHasMore(!!repositoryResponse.headers.link);
+                throw Error("API limit exceeded");
             })
             .catch(error => {
                 setError(`Error occurred: ${error.message}`);
@@ -66,7 +67,7 @@ export const useUserSearch = (): UseUserSearchReturn => {
     return { isLoading, error, repositories, page, handleInitialRepositoriesLoad, handleLoadMoreRepositories, handleChange };
 };
 
-interface UseUserSearchReturn {
+interface UseSearchReturn {
     isLoading: boolean;
     error: string;
     repositories: Repository[];

@@ -2,7 +2,7 @@ import {Skeleton, Text, VStack} from "@chakra-ui/react";
 import RepositoryFilter from "../components/RepositoryFilter.tsx";
 import RepositoriesList from "../components/RepositoriesList.tsx";
 import NoResults from "../components/NoResults.tsx";
-import {useUserSearch} from "../hooks/useUserSearch.ts";
+import {useSearch} from "../hooks/useSearch.ts";
 import {useRepositoryFilter} from "../hooks/useRepositoryFilter.ts";
 import {useEffect, useState} from "react";
 import {getUsersProgrammingLanguages} from "../services/githubService.ts";
@@ -17,7 +17,7 @@ const RepositoryViewPage = () => {
         repositories,
         handleInitialRepositoriesLoad,
         handleLoadMoreRepositories
-    } = useUserSearch();
+    } = useSearch();
 
     useEffect(() => {
         if (!username) return;
