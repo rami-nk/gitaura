@@ -32,7 +32,6 @@ export const useSearch = (): UseSearchReturn => {
             .then(repositoryResponse => {
                 setRepositories(repositoryResponse.data as Repository[]);
                 setHasMore(!!repositoryResponse.headers.link);
-                throw Error("API limit exceeded");
             })
             .catch(error => {
                 setError(`Error occurred: ${error.message}`);
