@@ -1,6 +1,7 @@
 import {Repository} from "../models/Repository.ts";
 import RepositoryCard from "./RepositoryCard.tsx";
 import React, {useEffect, useRef} from "react";
+import {Spinner} from "@chakra-ui/react";
 
 interface RepositoriesListProps {
     repositories: Repository[];
@@ -43,6 +44,9 @@ const RepositoriesList: React.FC<RepositoriesListProps> = (props) => {
                 props.repositories.map(repository =>
                     <RepositoryCard key={repository.id} repository={repository}/>
                 )
+            }
+            {
+                props.isLoading && <Spinner mt={10}/>
             }
             {
                 props.onLoadMore &&
