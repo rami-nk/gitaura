@@ -20,5 +20,5 @@ export const router = createBrowserRouter([
         ]
     }
 ], {
-    basename: "/gitaura"
+    basename: "/gitaura/"
 });

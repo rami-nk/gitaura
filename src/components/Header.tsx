@@ -12,7 +12,7 @@ const Header = () => {
             <Heading textAlign="center">GitAura</Heading>
             {
                 showBackButton &&
-                <Link style={{position: "absolute", left: 0}} to="//">
+                <Link style={{position: "absolute", left: 0}} to="/">
                     <Button leftIcon={<BsArrowLeft/>}></Button>
                 </Link>
             }

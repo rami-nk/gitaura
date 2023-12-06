@@ -1,13 +1,14 @@
-import { VStack } from "@chakra-ui/layout";
+import {VStack} from "@chakra-ui/layout";
 import UserSearchInput from "../components/UserSearchInput.tsx";
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
 import {getUsers} from "../services/githubService.ts";
+import {useFetch} from "../hooks/useFetch.ts";
+import {GitHubUser} from "../models/GitHubUser.ts";
+import {OctokitResponse} from "@octokit/types";
 
 const LandingPage = () => {
 
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string>('');
+    const {isLoading, error, fetchData, setError} = useFetch<OctokitResponse<GitHubUser>>();
 
     const navigate = useNavigate();
 
@@ -16,16 +17,9 @@ const LandingPage = () => {
             setError("Username must be set!");
             return;
         }
-        setIsLoading(true);
-        try {
-            const usersResponse = await getUsers(username);
-            navigate(`/repositories/${usersResponse.data.login}`)
-        } catch(error: any) {
-            setError(error.message === "Not Found" ?
-                `No user with name ${username}.` :
-                `Error occurred: ${error.message}`);
-        } finally {
-            setIsLoading(false);
+        const data = await fetchData(() => getUsers(username), `No user with name ${username}.`);
+        if (data) {
+            navigate(`/repositories/${data.data.login}`)
         }
     };
 
