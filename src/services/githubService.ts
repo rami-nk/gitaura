@@ -1,6 +1,7 @@
 import {Octokit} from "@octokit/core";
 import {restEndpointMethods} from "@octokit/plugin-rest-endpoint-methods";
 import {paginateRest} from "@octokit/plugin-paginate-rest";
+import {Endpoints} from "@octokit/types";
 
 const GitAuraOctokit = Octokit.plugin(restEndpointMethods, paginateRest);
 const octokit = new GitAuraOctokit();
@@ -11,7 +12,9 @@ export const getUsers = async (username: string) => {
     });
 }
 
-export const getRepositories = async (username: string, page: number, perPage: number = 15) => {
+export type RepositoriesResponse = Endpoints["GET /users/{username}/repos"]["response"];
+
+export const getRepositories = async (username: string, page: number, perPage: number = 15): Promise<RepositoriesResponse> => {
     return octokit.request("GET /users/{username}/repos", {
         username: username,
         per_page: perPage,

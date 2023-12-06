@@ -1,8 +1,8 @@
 import {useState} from "react";
 
-export const useFetch = <T>(): UseFetchData<T> => {
+export const useFetch = <T>(initialIsLoading: boolean = false): UseFetchData<T> => {
 
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(initialIsLoading);
     const [error, setError] = useState<string>('');
     const [data, setData] = useState<T>();
 

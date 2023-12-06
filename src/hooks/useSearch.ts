@@ -1,7 +1,8 @@
 import {useState} from 'react';
 import {Repository} from "../models/Repository.ts";
-import {getRepositories} from "../services/githubService.ts";
+import {getRepositories, RepositoriesResponse} from "../services/githubService.ts";
 import {hasNextPage} from "../services/stringUtils.ts";
+import {useFetch} from "./useFetch.ts";
 
 /**
  * Custom hook for handling repository data fetching from GitHub.
@@ -20,22 +21,17 @@ import {hasNextPage} from "../services/stringUtils.ts";
  */
 export const useSearch = (): UseSearchReturn => {
 
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string>('');
+    const {isLoading, error, fetchData} = useFetch<RepositoriesResponse>(true);
     const [repositories, setRepositories] = useState<Repository[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
 
     const handleInitialRepositoriesLoad = async (username: string) => {
-        try {
-            const repositoryResponse = await getRepositories(username, 1);
+        const repositoryResponse = await fetchData(() => getRepositories(username, 1));
+        if (!repositoryResponse) setRepositories([]);
+        if (repositoryResponse) {
             setRepositories(repositoryResponse.data as Repository[]);
             setHasMore(repositoryResponse.headers.link ? hasNextPage(repositoryResponse.headers.link) : false);
-        } catch (error: any) {
-            setError(`Error occurred: ${error.message}`);
-            setRepositories([]);
-        } finally {
-            setIsLoading(false);
         }
     };
 
@@ -44,14 +40,12 @@ export const useSearch = (): UseSearchReturn => {
 
         const nextPage = page + 1;
 
-        try {
-            const repositoryResponse = await getRepositories(username, nextPage);
+        const repositoryResponse = await fetchData(() => getRepositories(username, nextPage));
+        if (!repositoryResponse) setRepositories([]);
+        if (repositoryResponse) {
             setRepositories(prevState => [...prevState, ...(repositoryResponse.data as Repository[])]);
             setHasMore(repositoryResponse.headers.link ? hasNextPage(repositoryResponse.headers.link) : false);
             setPage(nextPage);
-        } catch (error: any) {
-            setError(`Error occurred: ${error.message}`);
-            setRepositories([]);
         }
     };
 
