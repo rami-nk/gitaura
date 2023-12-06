@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {Repository} from "../models/Repository.ts";
-import {searchForRepository} from '../services/githubService.ts';
+import {RepositorySearchResponse, searchForRepository} from '../services/githubService.ts';
+import {useFetch} from './useFetch.ts';
 
 /**
  * Custom hook for handling the search and filtering of repositories.
@@ -10,6 +11,8 @@ import {searchForRepository} from '../services/githubService.ts';
  * It performs search queries based on a given search string and user data.
  *
  * @returns {
+ *   isLoading: boolean - Indicating if search process is ongoing.
+ *   error: string - Error message if an error occurs during data fetching.
  *   filteredRepositories: Repository[] - The list of repositories filtered by the search query.
  *   showFilterResults: boolean - Indicates if fitler results should be displayed.
  *   handleFilterInRepository: (filterString: string, language: string) => void - Function to perform a search query and update filtered repositories.
@@ -19,6 +22,7 @@ import {searchForRepository} from '../services/githubService.ts';
 export const useRepositoryFilter = (username: string | undefined): UseRepositoryFilterReturn => {
     const [filteredRepositories, setFilteredRepositories] = useState<Repository[]>([]);
     const [showFilterResults, setShowFilterResults] = useState<boolean>(false);
+    const {error, isLoading, fetchData} = useFetch<RepositorySearchResponse>();
 
     const handleSearchInRepository = async (searchString: string, language: string) => {
         if (!username) return;
@@ -29,22 +33,24 @@ export const useRepositoryFilter = (username: string | undefined): UseRepository
             return;
         }
 
-        try {
-            const repositoryResponse = await searchForRepository(username, searchString, language)
-            setShowFilterResults(true);
-            setFilteredRepositories(repositoryResponse.data.items as Repository[]);
-        } catch (error: any) {
-            console.error('Error searching for repositories:', error);
+        const repositoryResponse = await fetchData(() => searchForRepository(username, searchString, language));
+        if (!repositoryResponse) {
             setShowFilterResults(false);
             setFilteredRepositories([]);
         }
+        if (repositoryResponse) {
+            setShowFilterResults(true);
+            setFilteredRepositories(repositoryResponse.data.items as Repository[]);
+        }
     };
 
-    return {filteredRepositories, showFilterResults: showFilterResults, handleSearchInRepository};
+    return {error, isLoading, filteredRepositories, showFilterResults: showFilterResults, handleSearchInRepository};
 };
 
 interface UseRepositoryFilterReturn {
     filteredRepositories: Repository[];
+    isLoading: boolean;
+    error: string;
     showFilterResults: boolean;
     handleSearchInRepository: (searchString: string, language: string) => void;
 }
