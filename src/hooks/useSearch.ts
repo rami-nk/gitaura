@@ -52,7 +52,6 @@ export const useSearch = (): UseSearchReturn => {
 
         setIsPagingLoading(true);
         const repositoryResponse = await fetchData(() => getRepositories(username, nextPage));
-        if (!repositoryResponse) setRepositories([]);
         if (repositoryResponse) {
             setRepositories(prevState => [...prevState, ...(repositoryResponse.data as Repository[])]);
             setHasMore(repositoryResponse.headers.link ? hasNextPage(repositoryResponse.headers.link) : false);

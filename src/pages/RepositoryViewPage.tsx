@@ -1,4 +1,4 @@
-import {Skeleton, Text, VStack} from "@chakra-ui/react";
+import {Skeleton, Text, useToast, VStack} from "@chakra-ui/react";
 import RepositoryFilter from "../components/RepositoryFilter.tsx";
 import RepositoriesList from "../components/RepositoriesList.tsx";
 import NoResults from "../components/NoResults.tsx";
@@ -17,15 +17,39 @@ const RepositoryViewPage = () => {
         filteredRepositories,
         showFilterResults,
         isLoading: isFilerLoading,
+        error: filterError,
         handleSearchInRepository
     } = useRepositoryFilter(username);
     const {
         isLoading,
+        error: loadingError,
         isPagingLoading,
         repositories,
         handleInitialRepositoriesLoad,
         handleLoadMoreRepositories
     } = useSearch();
+
+    const toast = useToast();
+
+    useEffect(() => {
+        if (loadingError.trim()  === "") return;
+        toast({
+            title: `Error while loading!`,
+            status: "error",
+            description: loadingError,
+            isClosable: true,
+        })
+    }, [loadingError]);
+
+    useEffect(() => {
+        if (filterError.trim()  === "") return;
+        toast({
+            title: `Error while filter!`,
+            status: "error",
+            description: filterError,
+            isClosable: true,
+        })
+    }, [filterError]);
 
     useEffect(() => {
         if (!username) return;
@@ -61,7 +85,8 @@ const RepositoryViewPage = () => {
                         <NoResults message={"0 Results"}/>
                     )
                 ) : username && repositories.length > 0 ? (
-                    <RepositoriesList key={2} isLoading={isPagingLoading} onLoadMore={() => handleLoadMoreRepositories(username)}
+                    <RepositoriesList key={2} isLoading={isPagingLoading}
+                                      onLoadMore={() => handleLoadMoreRepositories(username)}
                                       repositories={repositories}/>
                 ) : (
                     username && <NoResults message={`${username} doesn't have any public repositories yet.`}/>
