@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import {Repository} from "../models/Repository.ts";
-import { searchForRepository } from '../services/githubService.ts';
+import {searchForRepository} from '../services/githubService.ts';
 
 /**
  * Custom hook for handling the search and filtering of repositories.
@@ -20,7 +20,7 @@ export const useRepositoryFilter = (username: string | undefined): UseRepository
     const [filteredRepositories, setFilteredRepositories] = useState<Repository[]>([]);
     const [showFilterResults, setFilterResults] = useState<boolean>(false);
 
-    const handleSearchInRepository = (searchString: string, language: string) => {
+    const handleSearchInRepository = async (searchString: string, language: string) => {
         if (!username) return;
 
         if (searchString.trim() === "" && language.trim() === "") {
@@ -29,19 +29,18 @@ export const useRepositoryFilter = (username: string | undefined): UseRepository
             return;
         }
 
-        searchForRepository(username, searchString, language)
-            .then(response => {
-                setFilterResults(true);
-                setFilteredRepositories(response.data.items as Repository[]);
-            })
-            .catch(error => {
-                console.error('Error searching for repositories:', error);
-                setFilterResults(false);
-                setFilteredRepositories([]);
-            });
+        try {
+            const repositoryResponse = await searchForRepository(username, searchString, language)
+            setFilterResults(true);
+            setFilteredRepositories(repositoryResponse.data.items as Repository[]);
+        } catch (error: any) {
+            console.error('Error searching for repositories:', error);
+            setFilterResults(false);
+            setFilteredRepositories([]);
+        }
     };
 
-    return { filteredRepositories, showFilterResults: showFilterResults, handleSearchInRepository };
+    return {filteredRepositories, showFilterResults: showFilterResults, handleSearchInRepository};
 };
 
 interface UseRepositoryFilterReturn {
