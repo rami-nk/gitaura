@@ -25,38 +25,33 @@ export const useSearch = (): UseSearchReturn => {
     const [hasMore, setHasMore] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
 
-    const handleInitialRepositoriesLoad = (username: string) => {
-        setPage(1);
-        setIsLoading(true);
-        getRepositories(username, 1)
-            .then(repositoryResponse => {
-                setRepositories(repositoryResponse.data as Repository[]);
-                setHasMore(!!repositoryResponse.headers.link);
-            })
-            .catch(error => {
-                setError(`Error occurred: ${error.message}`);
-                setRepositories([]);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
+    const handleInitialRepositoriesLoad = async (username: string) => {
+        try {
+            const repositoryResponse = await getRepositories(username, 1);
+            setRepositories(repositoryResponse.data as Repository[]);
+            setHasMore(!!repositoryResponse.headers.link);
+        } catch(error: any) {
+            setError(`Error occurred: ${error.message}`);
+            setRepositories([]);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    const handleLoadMoreRepositories = (username: string) => {
+    const handleLoadMoreRepositories = async (username: string) => {
         if (!hasMore) return;
 
         const nextPage = page + 1;
 
-        getRepositories(username, nextPage)
-            .then(repositoryResponse => {
-                setRepositories(prevState => [...prevState, ...(repositoryResponse.data as Repository[])]);
-                setHasMore(!!repositoryResponse.headers.link);
-                setPage(nextPage);
-            })
-            .catch(error => {
-                setError(`Error occurred: ${error.message}`);
-                setRepositories([]);
-            });
+        try {
+            const repositoryResponse = await getRepositories(username, nextPage);
+            setRepositories(prevState => [...prevState, ...(repositoryResponse.data as Repository[])]);
+            setHasMore(!!repositoryResponse.headers.link);
+            setPage(nextPage);
+        } catch(error: any) {
+            setError(`Error occurred: ${error.message}`);
+            setRepositories([]);
+        }
     };
 
     const handleChange = () => {
