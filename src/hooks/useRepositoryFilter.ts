@@ -18,24 +18,24 @@ import {searchForRepository} from '../services/githubService.ts';
  */
 export const useRepositoryFilter = (username: string | undefined): UseRepositoryFilterReturn => {
     const [filteredRepositories, setFilteredRepositories] = useState<Repository[]>([]);
-    const [showFilterResults, setFilterResults] = useState<boolean>(false);
+    const [showFilterResults, setShowFilterResults] = useState<boolean>(false);
 
     const handleSearchInRepository = async (searchString: string, language: string) => {
         if (!username) return;
 
         if (searchString.trim() === "" && language.trim() === "") {
-            setFilterResults(false);
+            setShowFilterResults(false);
             setFilteredRepositories([]);
             return;
         }
 
         try {
             const repositoryResponse = await searchForRepository(username, searchString, language)
-            setFilterResults(true);
+            setShowFilterResults(true);
             setFilteredRepositories(repositoryResponse.data.items as Repository[]);
         } catch (error: any) {
             console.error('Error searching for repositories:', error);
-            setFilterResults(false);
+            setShowFilterResults(false);
             setFilteredRepositories([]);
         }
     };
