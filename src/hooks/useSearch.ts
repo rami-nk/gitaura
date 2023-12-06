@@ -5,19 +5,27 @@ import {hasNextPage} from "../services/stringUtils.ts";
 import {useFetch} from "./useFetch.ts";
 
 /**
- * Custom hook for handling repository data fetching from GitHub.
+ * `useSearch` is a custom hook for fetching and managing GitHub repositories.
+ * It encapsulates the logic for initial data loading, pagination, error handling, and state management related to repository data.
  *
- * This hook encapsulates the logic for fetching users repositories,
- * managing related states including loading, errors, and pagination for repositories.
+ * @returns {UseSearchReturn} - An object containing various states and functions related to repository data fetching.
+ *   - `isLoading` (boolean): Indicates if the initial data loading process is ongoing. This is true when initial data is being fetched and false during pagination.
+ *   - `isPagingLoading` (boolean): Indicates if additional data (pagination) is being loaded.
+ *   - `error` (string): Error message if an error occurs during data fetching.
+ *   - `repositories` (Repository[]): Array of repositories fetched from GitHub for the specified user.
+ *   - `page` (number): The current page number in the pagination sequence.
+ *   - `handleInitialRepositoriesLoad` (function): Function to initiate the fetching of user repositories. It should be called with the GitHub username.
+ *   - `handleLoadMoreRepositories` (function): Function to load more repositories for pagination. It continues fetching repositories from the next page.
  *
- * @returns {
- *   isLoading: boolean - Indicates if the initial data loading process is ongoing.
- *   isPagingLoading: boolean - Indicates if the page loading process is ongoing.
- *   error: string - Error message if an error occurs during data fetching.
- *   repositories: Repository[] - List of repositories for the current GitHub user.
- *   page: number - The current page number for paginated repository fetching.
- *   handleInitialRepositoriesLoad: (username: string) => void - Function to initiate fetching user data and their repositories.
- *   handleLoadMoreRepositories: () => void - Function to load more repositories (pagination).
+ * Usage:
+ * This hook is primarily used in components where displaying a list of GitHub repositories is required. It handles both the initial fetch and subsequent pagination of repositories.
+ *
+ * Example:
+ * const { isLoading, isPagingLoading, repositories, handleInitialRepositoriesLoad, handleLoadMoreRepositories } = useSearch();
+ * handleInitialRepositoriesLoad('githubUsername');
+ * // For pagination
+ * if (isPagingLoading) {
+ *    handleLoadMoreRepositories('githubUsername');
  * }
  */
 export const useSearch = (): UseSearchReturn => {
