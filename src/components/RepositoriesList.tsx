@@ -12,8 +12,8 @@ const RepositoriesList: React.FC<RepositoriesListProps> = (props) => {
     const loadMoreRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const observerCallback = (entries: any) => {
-            entries.forEach((entry: { isIntersecting: any; intersectionRatio: number }) => {
+        const observerCallback = (entries: IntersectionObserverEntry[]) => {
+            entries.forEach((entry: IntersectionObserverEntry) => {
                 if (entry.isIntersecting) {
                     props.onLoadMore();
                 }

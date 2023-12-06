@@ -54,9 +54,9 @@ const UserSearchInput: React.FC<UserSearchInputProps> = (props) => {
                        onChange={handleChange}/>
             </InputGroup>
             {!props.errorMessage ?
-                <FormHelperText>Enter a GitHub username</FormHelperText>
+                <FormHelperText textAlign="center">Enter a GitHub username</FormHelperText>
                 :
-                <FormErrorMessage>{props.errorMessage}</FormErrorMessage>
+                <FormErrorMessage justifyContent="center">{props.errorMessage}</FormErrorMessage>
             }
         </FormControl>
     </form>;
