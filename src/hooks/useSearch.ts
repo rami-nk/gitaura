@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import {Repository} from "../models/Repository.ts";
 import {getRepositories} from "../services/githubService.ts";
+import {hasNextPage} from "../services/stringUtils.ts";
 
 /**
  * Custom hook for handling repository data fetching from GitHub.
@@ -29,8 +30,8 @@ export const useSearch = (): UseSearchReturn => {
         try {
             const repositoryResponse = await getRepositories(username, 1);
             setRepositories(repositoryResponse.data as Repository[]);
-            setHasMore(!!repositoryResponse.headers.link);
-        } catch(error: any) {
+            setHasMore(repositoryResponse.headers.link ? hasNextPage(repositoryResponse.headers.link) : false);
+        } catch (error: any) {
             setError(`Error occurred: ${error.message}`);
             setRepositories([]);
         } finally {
@@ -46,19 +47,15 @@ export const useSearch = (): UseSearchReturn => {
         try {
             const repositoryResponse = await getRepositories(username, nextPage);
             setRepositories(prevState => [...prevState, ...(repositoryResponse.data as Repository[])]);
-            setHasMore(!!repositoryResponse.headers.link);
+            setHasMore(repositoryResponse.headers.link ? hasNextPage(repositoryResponse.headers.link) : false);
             setPage(nextPage);
-        } catch(error: any) {
+        } catch (error: any) {
             setError(`Error occurred: ${error.message}`);
             setRepositories([]);
         }
     };
 
-    const handleChange = () => {
-        setError("");
-    }
-
-    return { isLoading, error, repositories, page, handleInitialRepositoriesLoad, handleLoadMoreRepositories, handleChange };
+    return {isLoading, error, repositories, page, handleInitialRepositoriesLoad, handleLoadMoreRepositories};
 };
 
 interface UseSearchReturn {
@@ -68,5 +65,4 @@ interface UseSearchReturn {
     page: number;
     handleInitialRepositoriesLoad: (username: string) => void;
     handleLoadMoreRepositories: (username: string) => void;
-    handleChange: () => void;
 }
