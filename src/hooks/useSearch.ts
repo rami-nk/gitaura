@@ -1,77 +1,74 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import {Repository} from "../models/Repository.ts";
-import {getRepositories} from "../services/githubService.ts";
+import {getRepositories, RepositoriesResponse} from "../services/githubService.ts";
+import {hasNextPage} from "../services/stringUtils.ts";
+import {useFetch} from "./useFetch.ts";
 
 /**
- * Custom hook for handling repository data fetching from GitHub.
+ * `useSearch` is a custom hook for fetching and managing GitHub repositories.
+ * It encapsulates the logic for initial data loading, pagination, error handling, and state management related to repository data.
  *
- * This hook encapsulates the logic for fetching users repositories,
- * managing related states including loading, errors, and pagination for repositories.
+ * @returns {UseSearchReturn} - An object containing various states and functions related to repository data fetching.
+ *   - `isLoading` (boolean): Indicates if the initial data loading process is ongoing. This is true when initial data is being fetched and false during pagination.
+ *   - `isPagingLoading` (boolean): Indicates if additional data (pagination) is being loaded.
+ *   - `error` (string): Error message if an error occurs during data fetching.
+ *   - `repositories` (Repository[]): Array of repositories fetched from GitHub for the specified user.
+ *   - `page` (number): The current page number in the pagination sequence.
+ *   - `handleInitialRepositoriesLoad` (function): Function to initiate the fetching of user repositories. It should be called with the GitHub username.
+ *   - `handleLoadMoreRepositories` (function): Function to load more repositories for pagination. It continues fetching repositories from the next page.
  *
- * @returns {
- *   isLoading: boolean - Indicates if the data fetching process is ongoing.
- *   error: string - Error message if an error occurs during data fetching.
- *   repositories: Repository[] - List of repositories for the current GitHub user.
- *   page: number - The current page number for paginated repository fetching.
- *   handleInitialRepositoriesLoad: (username: string) => void - Function to initiate fetching user data and their repositories.
- *   handleLoadMoreRepositories: () => void - Function to load more repositories (pagination).
+ * Usage:
+ * This hook is primarily used in components where displaying a list of GitHub repositories is required. It handles both the initial fetch and subsequent pagination of repositories.
+ *
+ * Example:
+ * const { isLoading, isPagingLoading, repositories, handleInitialRepositoriesLoad, handleLoadMoreRepositories } = useSearch();
+ * handleInitialRepositoriesLoad('githubUsername');
+ * // For pagination
+ * if (isPagingLoading) {
+ *    handleLoadMoreRepositories('githubUsername');
  * }
  */
 export const useSearch = (): UseSearchReturn => {
 
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string>('');
+    const {isLoading, error, fetchData} = useFetch<RepositoriesResponse>(true);
+    const [isPagingLoading, setIsPagingLoading] = useState<boolean>(false);
     const [repositories, setRepositories] = useState<Repository[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
 
-    const handleInitialRepositoriesLoad = (username: string) => {
-        setPage(1);
-        setIsLoading(true);
-        getRepositories(username, 1)
-            .then(repositoryResponse => {
-                setRepositories(repositoryResponse.data as Repository[]);
-                setHasMore(!!repositoryResponse.headers.link);
-            })
-            .catch(error => {
-                setError(`Error occurred: ${error.message}`);
-                setRepositories([]);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
+    const handleInitialRepositoriesLoad = async (username: string) => {
+        const repositoryResponse = await fetchData(() => getRepositories(username, 1));
+        if (!repositoryResponse) setRepositories([]);
+        if (repositoryResponse) {
+            setRepositories(repositoryResponse.data as Repository[]);
+            setHasMore(repositoryResponse.headers.link ? hasNextPage(repositoryResponse.headers.link) : false);
+        }
     };
 
-    const handleLoadMoreRepositories = (username: string) => {
+    const handleLoadMoreRepositories = async (username: string) => {
         if (!hasMore) return;
 
         const nextPage = page + 1;
 
-        getRepositories(username, nextPage)
-            .then(repositoryResponse => {
-                setRepositories(prevState => [...prevState, ...(repositoryResponse.data as Repository[])]);
-                setHasMore(!!repositoryResponse.headers.link);
-                setPage(nextPage);
-            })
-            .catch(error => {
-                setError(`Error occurred: ${error.message}`);
-                setRepositories([]);
-            });
+        setIsPagingLoading(true);
+        const repositoryResponse = await fetchData(() => getRepositories(username, nextPage));
+        if (repositoryResponse) {
+            setRepositories(prevState => [...prevState, ...(repositoryResponse.data as Repository[])]);
+            setHasMore(repositoryResponse.headers.link ? hasNextPage(repositoryResponse.headers.link) : false);
+            setPage(nextPage);
+            setIsPagingLoading(false);
+        }
     };
 
-    const handleChange = () => {
-        setError("");
-    }
-
-    return { isLoading, error, repositories, page, handleInitialRepositoriesLoad, handleLoadMoreRepositories, handleChange };
+    return {isLoading: (isLoading && !isPagingLoading), isPagingLoading, error, repositories, page, handleInitialRepositoriesLoad, handleLoadMoreRepositories};
 };
 
 interface UseSearchReturn {
     isLoading: boolean;
+    isPagingLoading: boolean;
     error: string;
     repositories: Repository[];
     page: number;
     handleInitialRepositoriesLoad: (username: string) => void;
     handleLoadMoreRepositories: (username: string) => void;
-    handleChange: () => void;
 }

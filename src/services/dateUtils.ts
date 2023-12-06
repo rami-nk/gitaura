@@ -1,3 +1,26 @@
+/**
+ * Converts a date string into a human-readable "time ago" format.
+ *
+ * This function calculates the time elapsed since the given date and returns
+ * a string representing this time in a human-readable format. It handles various
+ * time ranges from seconds to months and defaults to the exact date for longer periods.
+ *
+ * @param {string} dateString - The date string to be converted into "time ago" format.
+ * @returns {string} - A string representing the time elapsed since the date.
+ *                     The format varies based on the time difference: "Updated just now",
+ *                     "Updated [x] minute(s) ago", "Updated [x] hour(s) ago", etc.
+ *
+ * Throws:
+ * - Error if the `dateString` represents a date in the future relative to the current time.
+ *
+ * Usage:
+ * This function is useful for displaying the relative time since an event occurred,
+ * such as the last update time of a file or a post.
+ *
+ * Example:
+ * const lastUpdated = "2021-03-29T12:30:00Z";
+ * console.log(timeAgo(lastUpdated)); // Output: "Updated [x] days ago"
+ */
 export const timeAgo = (dateString: string): string => {
     const date = new Date(dateString);
     const now = new Date();

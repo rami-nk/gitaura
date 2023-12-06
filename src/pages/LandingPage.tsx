@@ -1,30 +1,24 @@
-import { VStack } from "@chakra-ui/layout";
+import {VStack} from "@chakra-ui/layout";
 import UserSearchInput from "../components/UserSearchInput.tsx";
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
-import {getUsers} from "../services/githubService.ts";
+import {GitHubUserResponse, getUsers} from "../services/githubService.ts";
+import {useFetch} from "../hooks/useFetch.ts";
 
 const LandingPage = () => {
 
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string>('');
+    const {isLoading, error, fetchData, setError} = useFetch<GitHubUserResponse>();
 
     const navigate = useNavigate();
 
-    const handleSearch = (username: string) => {
-        setIsLoading(true);
-        getUsers(username)
-            .then(userDataResponse => {
-                navigate(`/repositories/${userDataResponse.data.login}`)
-            })
-            .catch(error => {
-                setError(error.message === "Not Found" ?
-                    `No user with name ${username}.` :
-                    `Error occurred: ${error.message}`);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
+    const handleSearch = async (username: string) => {
+        if (username.trim() === "") {
+            setError("Username must be set!");
+            return;
+        }
+        const data = await fetchData(() => getUsers(username), `No user with name ${username}.`);
+        if (data) {
+            navigate(`/repositories/${data.data.login}`)
+        }
     };
 
     const handleChange = () => {
