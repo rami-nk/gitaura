@@ -2,6 +2,7 @@ import './App.scss'
 import {
     Stack,
     VStack,
+    Text
 } from "@chakra-ui/react";
 import UserSearchInput from "./components/UserSearchInput.tsx";
 import Header from './components/Header.tsx';
@@ -50,8 +51,11 @@ const App = () => {
                 <VStack w={["90%", "70%", "60%"]} spacing={2} align="center">
                     {
                         showSearchResults && filteredRepositories.length !== 0 &&
-                        <RepositoriesList onLoadMore={() => {
-                        }} repositories={filteredRepositories}/>
+                        <>
+                            <Text>{`${filteredRepositories.length} results matching repositories.`}</Text>
+                            <RepositoriesList onLoadMore={() => {
+                            }} repositories={filteredRepositories}/>
+                        </>
                     }
                     {
                         !isLoading && userData && repositories.length > 0 && !showSearchResults &&
