@@ -82,3 +82,20 @@ button:focus-visible {
 * {
   box-sizing: border-box;
 }
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar-thumb {
+  background-color: #393636;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
