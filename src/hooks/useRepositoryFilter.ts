@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import {GitHubUser} from "../models/GitHubUser.ts";
 import {Repository} from "../models/Repository.ts";
 import { searchForRepository } from '../services/githubService.ts';
 
@@ -10,43 +9,43 @@ import { searchForRepository } from '../services/githubService.ts';
  * the visibility of search results and the filtered list of repositories.
  * It performs search queries based on a given search string and user data.
  *
- * @param {GitHubUser | null} userData - The current GitHub user's data used for searching repositories.
  * @returns {
  *   filteredRepositories: Repository[] - The list of repositories filtered by the search query.
- *   showSearchResults: boolean - Indicates if search results should be displayed.
- *   handleSearchInRepository: (searchString: string, language: string) => void - Function to perform a search query and update filtered repositories.
+ *   showFilterResults: boolean - Indicates if fitler results should be displayed.
+ *   handleFilterInRepository: (filterString: string, language: string) => void - Function to perform a search query and update filtered repositories.
  * }
+ * @param username
  */
-export const useRepositoryFilter = (userData: GitHubUser | null): UseRepositoryFilterReturn => {
+export const useRepositoryFilter = (username: string | undefined): UseRepositoryFilterReturn => {
     const [filteredRepositories, setFilteredRepositories] = useState<Repository[]>([]);
-    const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
+    const [showFilterResults, setFilterResults] = useState<boolean>(false);
 
     const handleSearchInRepository = (searchString: string, language: string) => {
-        if (!userData) return;
+        if (!username) return;
 
         if (searchString.trim() === "" && language.trim() === "") {
-            setShowSearchResults(false);
+            setFilterResults(false);
             setFilteredRepositories([]);
             return;
         }
 
-        searchForRepository(userData.login, searchString, language)
+        searchForRepository(username, searchString, language)
             .then(response => {
-                setShowSearchResults(true);
+                setFilterResults(true);
                 setFilteredRepositories(response.data.items as Repository[]);
             })
             .catch(error => {
-                console.error('Error searching repositories:', error);
-                setShowSearchResults(false);
+                console.error('Error searching for repositories:', error);
+                setFilterResults(false);
                 setFilteredRepositories([]);
             });
     };
 
-    return { filteredRepositories, showSearchResults, handleSearchInRepository };
+    return { filteredRepositories, showFilterResults: showFilterResults, handleSearchInRepository };
 };
 
 interface UseRepositoryFilterReturn {
     filteredRepositories: Repository[];
-    showSearchResults: boolean;
+    showFilterResults: boolean;
     handleSearchInRepository: (searchString: string, language: string) => void;
 }
