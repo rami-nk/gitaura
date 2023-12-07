@@ -15,7 +15,7 @@ const RepositoryCard: React.FC<RepositoryCardProps> = (props) => {
         <Card variant="elevated" w="full" key={props.repository.id} size="lg">
         <CardHeader textAlign="left" p={4}>
             <Link isExternal href={props.repository.html_url}
-                  _hover={{color: "#539BF5", textDecoration: "underline"}} color="#539BF5"
+                  _hover={{color: "link.100", textDecoration: "underline"}} color="link.100"
                   textAlign="left" size='md'>
                 <Heading size="md">
                     {props.repository.name}

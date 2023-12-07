@@ -10,6 +10,9 @@ const theme = extendTheme({config},
         colors: {
             card: {
                 100: "#768390"
+            },
+            link: {
+                100: "#539BF5"
             }
         },
     }
