@@ -30,7 +30,7 @@ const RepositoryFilter: React.FC<RepositorySearchFilter> = (props) => {
         <form style={{width: "100%"}} onSubmit={handleFormSubmit}>
             <FormControl>
                 <Flex gap={2} justifyContent="center">
-                    <InputGroup maxWidth="500px" flex="0 0 80%">
+                    <InputGroup flex="0 0 80%">
                         <InputLeftElement>
                             <GoRepo size={18}/>
                         </InputLeftElement>

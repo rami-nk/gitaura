@@ -67,7 +67,7 @@ const RepositoryViewPage = () => {
     }, [username]);
 
     return (
-        <VStack w="100%" spacing={16} mt={8} align="center">
+        <VStack w="100%" maxWidth="700px" spacing={16} mt={8} alignSelf="center">
             <RepositoryFilter onFilter={handleSearchInRepository}
                               languages={languages}/>
             <VStack w="full" spacing={2} align="center">

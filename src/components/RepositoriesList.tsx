@@ -39,7 +39,7 @@ const RepositoriesList: React.FC<RepositoriesListProps> = (props) => {
     }, [props.onLoadMore]);
 
     return (
-        <Stack mb={20}>
+        <Stack width="full" mb={20}>
             {
                 props.repositories.map(repository =>
                     <RepositoryCard key={repository.id} repository={repository}/>
