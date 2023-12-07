@@ -6,7 +6,7 @@
 Check out the live demo of GitAura [here](https://rami-nk.github.io/gitaura/). Experience the full functionality of the tool without the need to set it up locally.
 
 ## 🌟 Description
-GitAura is a web application developed as part of a coding challenge for MVST. It is a web-based tool designed to enhance the experience with GitHub repositories. It offers an intuitive interface for searching GitHub users and provides a nice visualization of repository statistics, incorporating a sleek, starry-themed design. It uses the GitHub API for fetching the data.
+GitAura is a web application developed as part of a coding challenge for [MVST](https://www.mvst.co/home). It is a web-based tool designed to enhance the experience with GitHub repositories. It offers an intuitive interface for searching GitHub users and provides a nice visualization of repository statistics, incorporating a sleek, starry-themed design. It uses the GitHub API for fetching the data.
 
 ### Landing Page
 <div align="center">
