@@ -30,14 +30,18 @@ const RepositoryFilter: React.FC<RepositorySearchFilter> = (props) => {
         <form style={{width: "100%"}} onSubmit={handleFormSubmit}>
             <FormControl>
                 <Flex gap={2} justifyContent="center">
-                    <InputGroup maxWidth="500px" flex="0 0 80%">
+                    <InputGroup flex="0 0 80%">
                         <InputLeftElement>
                             <GoRepo size={18}/>
                         </InputLeftElement>
 
-                        <Input id="repo-filter-input" placeholder={"Find a repository..."} onChange={handleChange}/>
+                        <Input id="repo-filter-input"
+                               _focusVisible={{boxShadow: "0 0 0 1px white"}}
+                               placeholder={"Find a repository..."} onChange={handleChange}/>
                     </InputGroup>
-                    <Select id="repo-filter-select"  onChange={handleSelectLanguage} flex="0 0 20%" placeholder='Language' size='md'>
+                    <Select id="repo-filter-select"
+                            _focusVisible={{boxShadow: "0 0 0 1px white"}}
+                            onChange={handleSelectLanguage} flex="0 0 20%" placeholder='Language' size='md'>
                         {
                             props.languages.map(language =>
                                 <option key={language} value={language}>{language}</option>

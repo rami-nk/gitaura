@@ -32,9 +32,9 @@ const UserSearchInput: React.FC<UserSearchInputProps> = (props) => {
         props.onChange && props.onChange();
     }
 
-    return <form style={{width: "fit-content"}} onSubmit={handleFormSubmit}>
+    return <form autoComplete="off" style={{width: "fit-content"}} onSubmit={handleFormSubmit}>
         <FormControl isInvalid={props.errorMessage !== undefined && props.errorMessage !== ""}>
-            <InputGroup size='lg'>
+            <InputGroup mb={5} size='lg'>
 
                 <InputLeftElement>
                     <AiFillGithub size={25}/>
@@ -51,10 +51,11 @@ const UserSearchInput: React.FC<UserSearchInputProps> = (props) => {
                     </IconButton>
                 </InputRightElement>
                 <Input placeholder="ThePrimeagen"
+                       _focusVisible={{boxShadow: "0 0 0 1px white"}}
                        onChange={handleChange}/>
             </InputGroup>
             {!props.errorMessage ?
-                <FormHelperText textAlign="center">Enter a GitHub username</FormHelperText>
+                <FormHelperText textAlign="center">Enter a GitHub username to explore his repositories!</FormHelperText>
                 :
                 <FormErrorMessage justifyContent="center">{props.errorMessage}</FormErrorMessage>
             }

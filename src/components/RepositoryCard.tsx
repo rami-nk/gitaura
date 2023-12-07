@@ -15,7 +15,7 @@ const RepositoryCard: React.FC<RepositoryCardProps> = (props) => {
         <Card variant="elevated" w="full" key={props.repository.id} size="lg">
         <CardHeader textAlign="left" p={4}>
             <Link isExternal href={props.repository.html_url}
-                  _hover={{color: "#539BF5", textDecoration: "underline"}} color="#539BF5"
+                  _hover={{color: "link.100", textDecoration: "underline"}} color="link.100"
                   textAlign="left" size='md'>
                 <Heading size="md">
                     {props.repository.name}
@@ -28,7 +28,7 @@ const RepositoryCard: React.FC<RepositoryCardProps> = (props) => {
                 <Flex flexWrap="wrap" gap={4} align="center">
                     {
                         props.repository.language &&
-                        <HStack spacing={1} align="center">
+                        <HStack color="card.100" spacing={1} align="center">
                             <Circle size={2}
                                     className={sanitizeClassName(props.repository.language)}/>
                             <Text fontSize="xs">{props.repository.language}</Text>
@@ -36,29 +36,28 @@ const RepositoryCard: React.FC<RepositoryCardProps> = (props) => {
                     }
                     {
                         props.repository.stargazers_count !== 0 &&
-                        <HStack spacing={0.75} align="center">
-                            <AiOutlineStar color="#768390" size={20}/>
-                            <Text color="#768390"
-                                  fontSize="xs">{props.repository.stargazers_count}</Text>
+                        <HStack color="card.100" spacing={0.75} align="center">
+                            <AiOutlineStar size={20}/>
+                            <Text fontSize="xs">{props.repository.stargazers_count}</Text>
                         </HStack>
                     }
                     {
                         props.repository.forks_count !== 0 &&
-                        <HStack spacing={0.75} align="center">
-                            <AiOutlineFork color="#768390" size={20}/>
-                            <Text color="#768390" fontSize="xs">{props.repository.forks_count}</Text>
+                        <HStack color="card.100" spacing={0.75} align="center">
+                            <AiOutlineFork size={20}/>
+                            <Text fontSize="xs">{props.repository.forks_count}</Text>
                         </HStack>
                     }
                     {
                         props.repository.license &&
-                        <HStack spacing={1} align="center">
-                            <GoLaw color="#768390" size={20}/>
-                            <Text color="#768390" fontSize="xs">{props.repository.license.name}</Text>
+                        <HStack color="card.100" spacing={1} align="center">
+                            <GoLaw size={20}/>
+                            <Text fontSize="xs">{props.repository.license.name}</Text>
                         </HStack>
                     }
                     {
                         props.repository.updated_at &&
-                        <Text color="#768390"
+                        <Text color="card.100"
                               fontSize="xs">{timeAgo(props.repository.updated_at)}</Text>
                     }
                 </Flex>

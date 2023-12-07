@@ -1,21 +1,30 @@
-import {Button, Flex, Heading} from "@chakra-ui/react";
+import {Button, Flex, Heading, useColorMode} from "@chakra-ui/react";
 import {Link, useLocation} from "react-router-dom";
 import {BsArrowLeft} from "react-icons/bs";
+import {MdDarkMode, MdOutlineLightMode} from "react-icons/md";
 
 const Header = () => {
     const location = useLocation();
+    const {colorMode, toggleColorMode} = useColorMode();
 
-    const showBackButton = location.pathname !== '/';
+    const isNotLandingPage = location.pathname !== '/';
 
     return (
         <Flex as="header" position="relative" justifyContent="center" alignItems="center" py={3}>
-            <Heading textAlign="center">GitAura</Heading>
+            <Heading fontSize={isNotLandingPage ? 40 : 80} textAlign="center">GitAura</Heading>
             {
-                showBackButton &&
+                isNotLandingPage &&
                 <Link style={{position: "absolute", left: 0}} to="/">
                     <Button leftIcon={<BsArrowLeft/>}></Button>
                 </Link>
             }
+            <Button _hover={{background: "none", border: "none"}} _focus={{outline: "none", boxShadow: "none"}} onClick={toggleColorMode} background="none" style={{position: "absolute", right: "10px", top: "10px"}}>
+                {
+                    colorMode === "light" ?
+                        <MdDarkMode/> :
+                        <MdOutlineLightMode/>
+                }
+            </Button>
         </Flex>
     );
 };
