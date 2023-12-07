@@ -18,7 +18,10 @@ const Header = () => {
                     <Button leftIcon={<BsArrowLeft/>}></Button>
                 </Link>
             }
-            <Button _hover={{background: "none", border: "none"}} _focus={{outline: "none", boxShadow: "none"}} onClick={toggleColorMode} background="none" style={{position: "absolute", right: "10px", top: "10px"}}>
+            <Button _hover={{background: "none", border: "none"}}
+                    _focus={{outline: "none", boxShadow: "none"}}
+                    onClick={toggleColorMode} background="none"
+                    style={{position: "absolute", right: 0, top: !isNotLandingPage ? 0 : "unset"}}>
                 {
                     colorMode === "light" ?
                         <MdDarkMode/> :
