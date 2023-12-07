@@ -67,10 +67,10 @@ const RepositoryViewPage = () => {
     }, [username]);
 
     return (
-        <VStack w="100%" spacing={8} mt={8} align="center">
+        <VStack w="100%" spacing={16} mt={8} align="center">
             <RepositoryFilter onFilter={handleSearchInRepository}
                               languages={languages}/>
-            <VStack w={["90%", "70%", "60%"]} spacing={2} align="center">
+            <VStack w="full" spacing={2} align="center">
                 {isLoading || isFilerLoading ? (
                     Array.from({length: 5}).map((_, index) => (
                         <Skeleton key={index} borderRadius="0.75rem" height="100px" width="full"/>
