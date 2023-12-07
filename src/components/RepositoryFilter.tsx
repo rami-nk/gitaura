@@ -36,13 +36,12 @@ const RepositoryFilter: React.FC<RepositorySearchFilter> = (props) => {
                         </InputLeftElement>
 
                         <Input id="repo-filter-input"
-                               _focus={{ boxShadow: "0 0 20px 1px white"}}
-                               boxShadow="0 0 15px 1px white"
+                               _focusVisible={{boxShadow: "0 0 0 1px white"}}
                                placeholder={"Find a repository..."} onChange={handleChange}/>
                     </InputGroup>
                     <Select id="repo-filter-select"
                             backdropFilter="blur(1px)"
-                            _focus={{ boxShadow: "0 0 20px 1px white"}}
+                            _focusVisible={{boxShadow: "0 0 0 1px white"}}
                             boxShadow="0 0 15px 1px white"
                             onChange={handleSelectLanguage} flex="0 0 20%" placeholder='Language' size='md'>
                         {
