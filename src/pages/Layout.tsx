@@ -6,7 +6,9 @@ const Layout = () => {
     return (
         <Stack height="100%" spacing={2}>
             <Header/>
-            <Outlet/>
+            <main style={{flex: 1}}>
+                <Outlet/>
+            </main>
         </Stack>
     );
 }
