@@ -63,10 +63,15 @@ export const getRepositories = async (username: string, page: number, perPage: n
  * searchForRepository('octocat', 'octo-library', 'JavaScript').then(results => console.log(results));
  */
 export const searchForRepository = async (username: string, searchString?: string, language?: string): Promise<RepositorySearchResponse> => {
-    const query = [
-        `user:${username}`,
-        searchString,
-        (language ? `language:${language}` : "")].join(" ");
+    let query = `user:${username}+fork:true`;
+    if (searchString) {
+        query += `+${searchString}`;
+    }
+    if (language) {
+        language = language === "C++" ? "cpp" : language; // ++ messing url encoding up
+        query += `+language:${language}`;
+    }
+
     return octokit.rest.search.repos({
         q: query,
     });

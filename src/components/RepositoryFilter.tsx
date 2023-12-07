@@ -36,7 +36,6 @@ const RepositoryFilter: React.FC<RepositorySearchFilter> = (props) => {
                         </InputLeftElement>
 
                         <Input id="repo-filter-input"
-                               backdropFilter="blur(1px)"
                                _focus={{ boxShadow: "0 0 20px 1px white"}}
                                boxShadow="0 0 15px 1px white"
                                placeholder={"Find a repository..."} onChange={handleChange}/>

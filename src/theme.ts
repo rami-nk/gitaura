@@ -5,17 +5,26 @@ const config: ThemeConfig = {
     useSystemColorMode: false,
 }
 
-const theme = extendTheme({config},
-    {
-        colors: {
-            card: {
-                100: "#768390"
+const theme = extendTheme({config}, {
+    components: {
+        Input: {
+            baseStyle: {
+                field: {
+                    backdropFilter: "blur(1px)",
+                    boxShadow: "0 0 15px 1px white",
+                    _focusVisible: {boxShadow: "0 0 20px 1px white !important"}
+                },
             },
-            link: {
-                100: "#539BF5"
-            }
         },
-    }
-)
+    },
+    colors: {
+        card: {
+            100: "#768390",
+        },
+        link: {
+            100: "#539BF5",
+        },
+    },
+});
 
-export default theme
+export default theme;

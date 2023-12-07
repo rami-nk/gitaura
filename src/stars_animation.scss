@@ -6,6 +6,7 @@
 
   @return unquote($value);
 }
+
 $shadows-small: multiple-box-shadow(700);
 $shadows-medium: multiple-box-shadow(200);
 $shadows-big: multiple-box-shadow(100);
@@ -44,6 +45,7 @@ html {
     box-shadow: $shadows-small;
   }
 }
+
 #stars2 {
   width: 2px;
   height: 2px;
@@ -61,6 +63,7 @@ html {
     box-shadow: $shadows-medium;
   }
 }
+
 #stars3 {
   width: 3px;
   height: 3px;
@@ -78,6 +81,7 @@ html {
     box-shadow: $shadows-big;
   }
 }
+
 #title {
   position: absolute;
   top: 50%;
@@ -86,7 +90,7 @@ html {
 
   color: #FFF;
   text-align: center;
-  font-family: 'lato',sans-serif;
+  font-family: 'lato', sans-serif;
   font-weight: 300;
   font-size: 50px;
   letter-spacing: 10px;
@@ -100,6 +104,7 @@ html {
     -webkit-text-fill-color: transparent;
   }
 }
+
 @keyframes animStar {
   from {
     transform: translateY(0px);
@@ -107,4 +112,6 @@ html {
   to {
     transform: translateY(-2000px);
   }
-};
+}
+
+;
