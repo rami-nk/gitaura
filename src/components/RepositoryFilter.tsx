@@ -40,9 +40,7 @@ const RepositoryFilter: React.FC<RepositorySearchFilter> = (props) => {
                                placeholder={"Find a repository..."} onChange={handleChange}/>
                     </InputGroup>
                     <Select id="repo-filter-select"
-                            backdropFilter="blur(1px)"
                             _focusVisible={{boxShadow: "0 0 0 1px white"}}
-                            boxShadow="0 0 15px 1px white"
                             onChange={handleSelectLanguage} flex="0 0 20%" placeholder='Language' size='md'>
                         {
                             props.languages.map(language =>
