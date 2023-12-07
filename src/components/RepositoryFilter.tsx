@@ -35,9 +35,17 @@ const RepositoryFilter: React.FC<RepositorySearchFilter> = (props) => {
                             <GoRepo size={18}/>
                         </InputLeftElement>
 
-                        <Input id="repo-filter-input" placeholder={"Find a repository..."} onChange={handleChange}/>
+                        <Input id="repo-filter-input"
+                               backdropFilter="blur(1px)"
+                               _focus={{ boxShadow: "0 0 20px 1px white"}}
+                               boxShadow="0 0 15px 1px white"
+                               placeholder={"Find a repository..."} onChange={handleChange}/>
                     </InputGroup>
-                    <Select id="repo-filter-select"  onChange={handleSelectLanguage} flex="0 0 20%" placeholder='Language' size='md'>
+                    <Select id="repo-filter-select"
+                            backdropFilter="blur(1px)"
+                            _focus={{ boxShadow: "0 0 20px 1px white"}}
+                            boxShadow="0 0 15px 1px white"
+                            onChange={handleSelectLanguage} flex="0 0 20%" placeholder='Language' size='md'>
                         {
                             props.languages.map(language =>
                                 <option key={language} value={language}>{language}</option>

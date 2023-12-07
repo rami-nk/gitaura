@@ -51,6 +51,9 @@ const UserSearchInput: React.FC<UserSearchInputProps> = (props) => {
                     </IconButton>
                 </InputRightElement>
                 <Input placeholder="ThePrimeagen"
+                       backdropFilter="blur(1px)"
+                       _focus={{ boxShadow: "0 0 20px 1px white"}}
+                       boxShadow="0 0 15px 1px white"
                        onChange={handleChange}/>
             </InputGroup>
             {!props.errorMessage ?

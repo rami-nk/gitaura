@@ -50,14 +50,14 @@ const RepositoryCard: React.FC<RepositoryCardProps> = (props) => {
                     }
                     {
                         props.repository.license &&
-                        <HStack spacing={1} align="center">
-                            <GoLaw color="card.100" size={20}/>
-                            <Text color="card.100" fontSize="xs">{props.repository.license.name}</Text>
+                        <HStack color="card.100" spacing={1} align="center">
+                            <GoLaw size={20}/>
+                            <Text fontSize="xs">{props.repository.license.name}</Text>
                         </HStack>
                     }
                     {
                         props.repository.updated_at &&
-                        <Text color="#768390"
+                        <Text color="card.100"
                               fontSize="xs">{timeAgo(props.repository.updated_at)}</Text>
                     }
                 </Flex>
