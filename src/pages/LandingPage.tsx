@@ -26,7 +26,7 @@ const LandingPage = () => {
     }
 
     return (
-        <VStack height="full" w="full" mt={100} align="center">
+        <VStack height="full" w="full" mb="10rem" justifyContent="center" align="center">
             <UserSearchInput onChange={handleChange} isLoading={isLoading} errorMessage={error}
                              onSearch={handleSearch}/>
         </VStack>
