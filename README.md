@@ -8,7 +8,22 @@ Check out the live demo of GitAura [here](https://rami-nk.github.io/gitaura/). E
 ## 🌟 Description
 GitAura is a web application developed as part of a coding challenge for MVST. It is a web-based tool designed to enhance the experience with GitHub repositories. It offers an intuitive interface for searching GitHub users and provides a nice visualization of repository statistics, incorporating a sleek, starry-themed design. It uses the GitHub API for fetching the data.
 
-![GitAura Interface](link-to-your-app-screenshot.png)
+### Landing Page
+<div align="center">
+  <strong>Light Mode</strong><br>
+  <img src="images/gitaura-light.png" alt="GitAura Light Mode Screenshot" width="80%" />
+</div>
+
+<div align="center" style="margin-top: 20px;">
+  <strong>Dark Mode</strong><br>
+  <img src="images/gitaura-dark.png" alt="GitAura Dark Mode Screenshot" width="80%" />
+</div>
+
+### Repository View Page
+<div align="center" style="margin-top: 20px;">
+  <strong>Explore GitHub Repositories</strong><br>
+  <img src="images/repository-view-page-dark.png" alt="GitAura Repository View Screenshot" width="80%" />
+</div>
 
 ## 🚀 Features
 - **🔍 User Search**: Search for any GitHub user with ease.
@@ -31,7 +46,7 @@ Follow these steps to get your development environment running:
 
 1. Clone the repository:
 ```sh
-git clone https://github.com/yourusername/GitAura.git
+git clone https://github.com/rami-nk/gitaura.git
 ```
 
 2. Navigate to the project directory:
