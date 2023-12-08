@@ -51,7 +51,7 @@ git clone https://github.com/rami-nk/gitaura.git
 
 2. Navigate to the project directory:
 ```sh
-cd GitAura
+cd gitaura
 ```
 
 3. Install dependencies:
